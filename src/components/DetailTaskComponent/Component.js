@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { WrapperStyleAddUserForm, WrapperStyleDate, WrapperStyleFileResponse, WrapperStyleInstruction, WrapperStyleInstructionFile, WrapperStyleResponse, WrapperStyleStatusTask } from "./Style";
+import { WrapperStyleAddUserForm, WrapperStyleAssignTo, WrapperStyleDate, WrapperStyleFileResponse, WrapperStyleInstruction, WrapperStyleInstructionFile, WrapperStyleResponse, WrapperStyleStatusTask } from "./Style";
 
 import {
     FileWordFilled,
     CloseCircleFilled,
 } from '@ant-design/icons';
 import { Button, Card, Input, List } from "antd";
+import { useNavigate } from "react-router-dom";
 
 export const StatusComponent = ({ status }) => {
     return (
@@ -27,12 +28,26 @@ export const DateComponent = ({ dueDate, startDate }) => {
 
 export const AssignToComponent = ({ emailUser }) => {
     return (
-        <WrapperStyleStatusTask>
+        <WrapperStyleAssignTo>
             <p style={{ marginRight: "15px" }}>Assign to:</p>
             <p style={{ color: "green" }}>{emailUser}</p>
-        </WrapperStyleStatusTask>
+        </WrapperStyleAssignTo>
     );
 }
+
+export const TaskInProjectComponent = ({ projectName, projectId }) => {
+    const navigate = useNavigate();
+    const handleNavigateProjectDetail = () =>{
+        navigate(`/project/${projectId}`)
+    }
+    return (
+        <WrapperStyleAssignTo>
+            <p style={{ marginRight: "15px", marginTop:"7px" }}>Project name:</p>
+            <Button style={{backgroundColor:"#dbd6df", fontSize:"20px", border:"none"}} onClick={()=>handleNavigateProjectDetail()}><p style={{ color: "green" }}>{projectName}</p></Button>
+        </WrapperStyleAssignTo>
+    );
+}
+
 
 export const InstructionTaskComponent = ({ content, instructionFile }) => {
     const [pdfUrl, setPdfUrl] = useState(null);
@@ -76,7 +91,7 @@ export const InstructionTaskComponent = ({ content, instructionFile }) => {
                 <p style={{ marginRight: "30px", color: "gray" }}>Note: </p>
                 <p>{content}</p>
             </div>
-            <WrapperStyleInstructionFile href={pdfUrl} download="file.docx" style={{ color: 'blue', textDecoration: 'underline' }}>
+            <WrapperStyleInstructionFile href={pdfUrl} download="instruction-file.docx" style={{ color: 'blue', textDecoration: 'underline' }}>
                 download instruction file
                 <FileWordFilled />
             </WrapperStyleInstructionFile>
@@ -98,10 +113,11 @@ export const TaskResponseComponent = () => {
 export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
     const token = localStorage.getItem("tokenLogin");
 
+
     const [userIdInput, setUserIdInput] = useState("")
     const [userIdWantToAdd, setUserIdWantToAdd] = useState("");
 
-    //lấy user trong project chứa task bằng id project
+    //lấy danh sách user trong project chứa task bằng id project
     const [users, setUsers] = useState([]);
     useEffect(() => {
         async function getDetailProject() {
@@ -122,6 +138,7 @@ export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
 
                 const responseData = await response.json();
                 setUsers(responseData.data.users);
+                console.log(responseData.data.users);
             } catch (error) {
                 console.log(error);
             }
@@ -162,6 +179,7 @@ export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
             <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "1px" }} onClick={onClose} />
             <h3>Add User</h3>
 
+            {/*hiển thị search nếu task không nằm trong project nào*/ }
             {!projectId && <div style={{ display: "flex" }}>
                 <Input placeholder="User ID" onChange={(e) => setUserIdInput(e.target.value)} />
                 <Button style={{ backgroundColor: "blanchedalmond", color: "gray" }} onClick={() => setUserIdWantToAdd(userIdInput)}>ADD</Button>

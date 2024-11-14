@@ -19,13 +19,13 @@ export const WrapperStyleDetailUserTitle = styled.div`
 export const WrapperStyleSubmitButton = styled(Button)`
     background-color: green;
     color: white;
-    width: 100px;
+    width: 140px;
     margin-left: 340px;
 `
 export const WrapperStylePassWordButton = styled(Button)`
     background-color: green;
     color: white;
-    width: 100px;
+    width: 140px;
     margin-left: 40px;
 `
 

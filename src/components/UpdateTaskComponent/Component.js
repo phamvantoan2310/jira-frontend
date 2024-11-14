@@ -63,7 +63,7 @@ export const UpdateTask = ({ taskName, description, startDate, dueDate, taskId, 
             updateData.due_date = moment(dueDateUpdate).format("YYYY-MM-DD").toString();
         }
         if (instructionFile) {
-            updateData.instructionFile = instructionFile;
+            updateData.instruction_file = instructionFile;
         }
 
         console.log(updateData)

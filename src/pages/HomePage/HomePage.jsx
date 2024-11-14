@@ -103,6 +103,7 @@ const HomePage = () => {
     ];
 
     const token = localStorage.getItem("tokenLogin");
+    const [isExpiredToken, setIsExpiredToken] = useState(false);
 
 
     useEffect(() => {
@@ -119,9 +120,15 @@ const HomePage = () => {
                 });
 
                 if (!response.ok) {
+                    const errorResult = await response.json();
+                    if(errorResult.message == "token expired"){
+                        alert("Phiên đăng nhập hết hạn!");
+                        setIsExpiredToken(true);
+                    }
                     throw new Error("get project fail!");
                 }
 
+                setIsExpiredToken(false);
                 const responseData = await response.json();
                 setProjects(responseData.data);
             } catch (error) {
@@ -147,7 +154,7 @@ const HomePage = () => {
                 const responseData = await response.json();
                 setTasks(responseData.data);
             } catch (error) {
-                console.log(error);
+                console.log(error.name);
             }
         }
         getProjects();
@@ -166,7 +173,7 @@ const HomePage = () => {
 
     return (
         <div>
-            <HeaderComponent setNameMission={setNameMissionWantToSearch} search={handleSearchMission}/>
+            <HeaderComponent setNameMission={setNameMissionWantToSearch} search={handleSearchMission} error={isExpiredToken}/>
             <div style={{ padding: "0 120px", backgroundColor: "#e6e6e6", height: "1000px" }}>
                 <div style={{ display: "flex" }}>
                     <WrapperStyleProject>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { WrapperStyleAddUserButton, WrapperStyleDeleteButton, WrapperStyleDetaiTask, WrapperStyleTaskName, WrapperStyleUpdate, WrapperStyleUpdateTaskButton } from "../../components/DetailTaskComponent/Style";
-import { AddUserToTaskComponent, AssignToComponent, DateComponent, InstructionTaskComponent, StatusComponent, TaskResponseComponent } from "../../components/DetailTaskComponent/Component";
+import { WrapperStyleAddUserButton, WrapperStyleDeleteButton, WrapperStyleDetaiTask, WrapperStyleRemoveFromProjectButton, WrapperStyleTaskName, WrapperStyleUpdate, WrapperStyleUpdateTaskButton } from "../../components/DetailTaskComponent/Style";
+import { AddUserToTaskComponent, AssignToComponent, DateComponent, InstructionTaskComponent, StatusComponent, TaskInProjectComponent, TaskResponseComponent } from "../../components/DetailTaskComponent/Component";
 import { UpdateTask } from "../../components/UpdateTaskComponent/Component";
 
 import {
@@ -19,9 +19,11 @@ export const DetailTaskPage = () => {
     }
 
     const token = localStorage.getItem("tokenLogin");
+    const [isExpiredToken, setIsExpiredToken] = useState(false);
 
     const [task, setTask] = useState();
     const [assign_to, setAssign_to] = useState();
+    const [project, setProject] = useState();
 
     useEffect(() => {
         async function getDetailTask() {
@@ -37,13 +39,19 @@ export const DetailTaskPage = () => {
 
 
                 if (!response.ok) {
+                    const errorResult = await response.json();
+                    if(errorResult.message == "token expired"){
+                        alert("Phiên đăng nhập hết hạn!");
+                        setIsExpiredToken(true);
+                    }
                     throw new Error("get task fail");
                 }
-
+                
+                setIsExpiredToken(false);
                 const responseData = await response.json();
                 setTask(responseData.data);
                 setAssign_to(responseData.data.assigned_to);
-                console.log(responseData.data.assigned_to);
+                setProject(responseData.data.project);
             } catch (error) {
                 alert("lấy task thất bại!");
                 console.log(error);
@@ -91,6 +99,34 @@ export const DetailTaskPage = () => {
         }
     }
 
+    //remove from project
+    const handleRemoveFromProject = async() =>{
+        try {
+            const endpoint = `${process.env.REACT_APP_API_KEY}/task//removefromproject/${IdTask}`;
+            const response = await fetch(endpoint, {
+                method: 'PUT',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("remove task from project fail!");
+            }
+
+            const result = await response.json();
+            if (result.status == "OK") {
+                alert("remove task from project success!");
+            } else {
+                alert("remove task from project fail");
+            }
+        } catch (error) {
+            console.log(error);
+            alert(error);
+        }
+    }
+
     //add user
     const [isShowAddUserForm, setIsShowAddUserForm] = useState(false);
 
@@ -99,7 +135,7 @@ export const DetailTaskPage = () => {
     }
 
     //set status task
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState(task?.status);
     useEffect(() => {
         async function setStatusTask() {
             const due_date = new Date(task?.due_date);
@@ -107,7 +143,7 @@ export const DetailTaskPage = () => {
 
             if (due_date < current_date) {
                 setStatus("Complete");
-            } else if (task?.status === "Not-Started") {
+            } else {
                 setStatus("In-Progress");
             }
         }
@@ -153,7 +189,7 @@ export const DetailTaskPage = () => {
 
     return (
         <div>
-            <HeaderComponent />
+            <HeaderComponent error={isExpiredToken}/>
             <WrapperStyleDetaiTask>
                 <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "5px" }} onClick={() => handleLinkToHomePage()} />
                 <WrapperStyleTaskName>
@@ -162,6 +198,7 @@ export const DetailTaskPage = () => {
 
                 <StatusComponent status={task?.status} />
                 <DateComponent startDate={task?.start_date} dueDate={task?.due_date} />
+                <TaskInProjectComponent projectName={project?.name} projectId={project?._id}/>
                 <AssignToComponent emailUser={assign_to?.email} />
 
 
@@ -173,13 +210,14 @@ export const DetailTaskPage = () => {
                 <hr style={{ margin: "50px" }} />
 
                 <WrapperStyleUpdate>
+                    <WrapperStyleRemoveFromProjectButton onClick={handleRemoveFromProject}>Remove from project</WrapperStyleRemoveFromProjectButton>
                     <WrapperStyleUpdateTaskButton onClick={handleIsShowUpdateForm}>Update Task</WrapperStyleUpdateTaskButton>
                     <WrapperStyleAddUserButton onClick={handleIsShowAddUserForm}>Assign User</WrapperStyleAddUserButton>
                     <WrapperStyleDeleteButton onClick={handleDeleteTask}>Delete</WrapperStyleDeleteButton>
                 </WrapperStyleUpdate>
 
                 {isShowUpdateForm && <UpdateTask taskName={task?.name} description={task?.description} startDate={task?.start_date} dueDate={task?.due_date} taskId={task?._id} onClose={handleIsShowUpdateForm} />}  {/* truyền hàm handleIsShowUpdateFrom để đóng updateform*/}
-                {isShowAddUserForm && <AddUserToTaskComponent projectId={task?.project ? task.project : ""} taskId={task?._id} onClose={handleIsShowAddUserForm} />}
+                {isShowAddUserForm && <AddUserToTaskComponent projectId={task?.project ? task.project._id : ""} taskId={task?._id} onClose={handleIsShowAddUserForm} />}
             </WrapperStyleDetaiTask>
         </div>
     );

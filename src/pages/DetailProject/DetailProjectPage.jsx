@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { WrapperStyleAddTaskButton, WrapperStyleAddUserButton, WrapperStyleDeleteButton, WrapperStyleDetailProject, WrapperStyleProjectName, WrapperStyleTaskButton, WrapperStyleTaskInProject, WrapperStyleUpdate, WrapperStyleUpdateProjectButton } from "../../components/DetailProjectComponent/Style";
+import { WrapperStyleAddTaskButton, WrapperStyleAddUserButton, WrapperStyleDeleteButton, WrapperStyleDetailProject, WrapperStyleProjectName, WrapperStyleTaskButton, WrapperStyleTaskInProject, WrapperStyleUpdate, WrapperStyleUpdateProjectButton, WrapperStyleUserButton, WrapperStyleUserInProject } from "../../components/DetailProjectComponent/Style";
 import { AddUserComponent, DateComponent, FreeTaskListComponent, InstructionProjectComponent, StatusComponent } from "../../components/DetailProjectComponent/Component";
 import {
     CheckOutlined,
@@ -11,12 +11,14 @@ import {
 import { UpdateProject } from "../../components/UpdateProjectComponent/Component";
 import moment from "moment";
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
+import { Button, Col, Row } from "antd";
 
 
 export const DetailProjectPage = () => {
     const { IdProject } = useParams();
 
     const token = localStorage.getItem("tokenLogin");
+    const [isExpiredToken, setIsExpiredToken] = useState(false);
 
     const navigate = useNavigate();
 
@@ -29,7 +31,10 @@ export const DetailProjectPage = () => {
 
     const [Project, setProject] = useState();
     const [TasksInProject, setTasksInProject] = useState([]);
+    const [UserInProject, setUserInProject] = useState([]);
 
+
+    //free task
     const [Tasks, setTasks] = useState([]);
 
     useEffect(() => {
@@ -46,12 +51,20 @@ export const DetailProjectPage = () => {
 
 
                 if (!response.ok) {
+                    const errorResult = await response.json();
+                    if (errorResult.message == "token expired") {
+                        alert("Phiên đăng nhập hết hạn!");
+                        setIsExpiredToken(true);
+                    }
+
                     throw new Error("get project fail");
                 }
 
+                setIsExpiredToken(false);
                 const responseData = await response.json();
                 setProject(responseData.data);
                 setTasksInProject(responseData.data.tasks);
+                setUserInProject(responseData.data.users);
             } catch (error) {
                 alert("lấy project thất bại!");
                 console.log(error);
@@ -62,15 +75,15 @@ export const DetailProjectPage = () => {
 
 
     //set status project
-    const [status, setStatus] = useState("Not-Started");
-    useEffect(() => {     
+    const [status, setStatus] = useState(Project?.status);
+    useEffect(() => {
         async function setStatusProject() {
             const due_date = new Date(Project?.due_date);
             const current_date = new Date();
 
             if (due_date < current_date) {
                 setStatus("Complete");
-            } else if (Project?.status === "Not-Started") {
+            } else {
                 setStatus("In-Progress");
             }
         }
@@ -155,8 +168,6 @@ export const DetailProjectPage = () => {
     }
 
     //addTask
-    const [isShowAddTaskForm, setIsShowAddTaskForm] = useState(false);
-
     const handleGetAllTask = async () => {
         const endpoint = `${process.env.REACT_APP_API_KEY}/task/gettaskfreebymanagerid`;
         try {
@@ -202,20 +213,78 @@ export const DetailProjectPage = () => {
     }
 
 
+    //show user list in project 
+    const [isShowMemberList, setIsShowMemberList] = useState(false);
+    const handleShowMemberList = () => {
+        setIsShowMemberList(isShowMemberList ? false : true);
+    }
+
+    //remove user from project 
+    const handleRemoveUserFromProject = async (userId) => {
+        if (window.confirm("Are you sure you want to remove user ", userId)) {
+            try {
+                const endpoint = `${process.env.REACT_APP_API_KEY}/project/removeuserfromproject/${IdProject}`;
+                const response = await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ userId: userId }),
+                });
+
+                if (!response) {
+                    throw new Error("remove user to project fail");
+                }
+
+                const result = await response.json();
+                if (result.status === 'OK') {
+                    alert(`remove user success`);
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.log(error);
+                alert("err: ", error);
+            }
+        }
+    }
+
+
     return (
         <div>
-            <HeaderComponent />
+            <HeaderComponent error={isExpiredToken} />
+            <div style={{ height: '100vh', padding: '20px', marginBottom:"100px" }}>
+                <Row type="flex" style={{ height: '100%' }} justify="space-around" align="middle">
+                    <Col flex="auto" style={{ backgroundColor: '#f0f0f0', height: '100%' }}>
+                        <WrapperStyleProjectName>
+                            {Project?.name}
+                        </WrapperStyleProjectName>
+                        <div style={{ height: '50%' }}>
+                            <StatusComponent status={Project?.status} />
+                            <DateComponent startDate={Project?.start_date} dueDate={Project?.due_date} />
+                            <InstructionProjectComponent content={Project?.description} instructionFile={Project?.instruction_file} />
+                        </div>
+                        <div style={{ height: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            Cột 1
+                        </div>
+                    </Col>
+                    <Col flex="auto" style={{ backgroundColor: '#d9d9d9', height: '100%' }}>
+                        <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            Cột 2
+                        </div>
+                    </Col>
+                    <Col flex="auto" style={{ backgroundColor: '#bfbfbf', height: '100%' }}>
+                        <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "3px", fontSize: "20px" }} onClick={() => handleLinkToHomePage()} />
+                        <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            Cột 3
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+
             <WrapperStyleDetailProject>
-                <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "5px" }} onClick={() => handleLinkToHomePage()} />
-                <WrapperStyleProjectName>
-                    {Project?.name}
-                </WrapperStyleProjectName>
 
-                <StatusComponent status={Project?.status} />
-                <DateComponent startDate={Project?.start_date} dueDate={Project?.due_date} />
-
-
-                <InstructionProjectComponent content={Project?.description} instructionFile={"../../../pdf/test.pdf"} />
+                
 
                 <hr style={{ margin: "50px" }} />
 
@@ -232,7 +301,19 @@ export const DetailProjectPage = () => {
                     })}
                 </WrapperStyleTaskInProject>
 
-                <hr style={{ margin: "50px" }} />
+                <hr style={{ margin: "50px", marginBottom: "20px" }} />
+                <Button style={{ marginLeft: "50px" }} onClick={handleShowMemberList}>Member list</Button>
+                {isShowMemberList &&
+                    <WrapperStyleUserInProject>
+                        {UserInProject.map((user) => {
+                            return (
+                                <div>
+                                    <WrapperStyleUserButton onClick={() => handleRemoveUserFromProject(user._id)}>{user.email}</WrapperStyleUserButton>
+                                </div>
+                            );
+                        })}
+                    </WrapperStyleUserInProject>
+                }
 
                 <WrapperStyleUpdate>
                     <WrapperStyleUpdateProjectButton onClick={handleIsShowUpdateForm}>Update Project</WrapperStyleUpdateProjectButton>

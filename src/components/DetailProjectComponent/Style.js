@@ -13,45 +13,59 @@ export const WrapperStyleDetailProject = styled.div`
 
 export const WrapperStyleProjectName = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     font-weight: bold;
     font-size: 30px;
-    padding-top: 60px;   
+    padding-top: 60px; 
+    padding-left: 60px;  
 `
 
-export const WrapperStyleStatusProject = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 30px;
-    margin-right: 80px;
+export const WrapperStyleStatusProject = styled(Button)`
+    justify-content: center;
+    margin-top: 100px;
+    margin-left: 100px;
+    font-size: 20px;
+    height: 100px;
+    width : 300px;
 `
 
 export const WrapperStyleDate = styled.div`
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
-    margin-right: 80px;
+    margin-left: 100px;
+    margin-top : 50px;
+    font-size: 20px;
+    width : 300px;
 `
-export const WrapperStyleInstructionFile = styled.a`
+export const WrapperStyleInstructionFile = styled(Button)`
     text-decoration: none;
-    padding-left: 78px;
-    color: #009933;
+    color: gray;
 `
 
 export const WrapperStyleInstruction = styled.div`
-    width: 900px;
-    margin-left: 50px;
-    margin-top: -60px;
+    margin-left: 100px;
+    margin-top : 50px;
 `
 
 export const WrapperStyleTaskInProject = styled.div`
     margin-left: 50px;
+`
+export const WrapperStyleUserInProject = styled.div`
+    margin-left: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-wrap: wrap; /* Để các nút có thể xuống dòng khi không đủ không gian */ 
 `
 
 export const WrapperStyleTaskButton = styled(Button)`
     width: 500px;
     margin-top: 20px;
     margin-right: 20px
+`
+
+export const WrapperStyleUserButton = styled(Button)`
+    width: 500px;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-left: 80px;
 `
 
 export const WrapperStyleUpdateProjectButton = styled(Button)`

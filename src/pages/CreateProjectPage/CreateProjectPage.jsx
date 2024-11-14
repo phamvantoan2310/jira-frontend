@@ -20,6 +20,7 @@ export const CreateProjectPage = () => {
     }
 
     const token = localStorage.getItem("tokenLogin");
+    const [isExpiredToken, setIsExpiredToken] = useState(false);
 
     const [projectName, setProjectName] = useState("");
     const [description, setDescription] = useState("");
@@ -62,10 +63,16 @@ export const CreateProjectPage = () => {
                     instruction_file: instructionFile
                 }),
             }).then(
-                response => {
+                async response => {
                     if (response.ok) {
+                        setIsExpiredToken(false);
                         return response.json();
                     } else {
+                        const errorResult = await response.json();
+                        if (errorResult.message == "token expired") {
+                            alert("Phiên đăng nhập hết hạn!");
+                            setIsExpiredToken(true);
+                        }
                         throw new Error("create project fail");
                     }
                 }
@@ -90,7 +97,7 @@ export const CreateProjectPage = () => {
 
     return (
         <div>
-            <HeaderComponent />
+            <HeaderComponent error={isExpiredToken}/>
             <div style={{ backgroundColor: "#b3b3cc", height: "1000px" }}>
                 <WrapperStyleCreateProjectPage>
                     <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "5px", fontSize: "20px" }} onClick={() => handleLinkToHomePage()} />

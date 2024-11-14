@@ -2,7 +2,7 @@ import { Col } from "antd";
 import React, { useState } from "react";
 import { WrapperHeaderButton, WrapperHeaderButtonLogin, WrapperHeaderButtonUser, WrapperHeaderSearch } from "./Component";
 import { WrapperHeader, WrapperHeaderText } from "./style";
-const HeaderComponent = ({ setNameMission, search }) => {
+const HeaderComponent = ({ setNameMission, search, error }) => {
 
     const jwt = localStorage.getItem("tokenLogin");
 
@@ -22,7 +22,7 @@ const HeaderComponent = ({ setNameMission, search }) => {
                     </div>
                 </Col>
                 <Col span={2}>
-                    {!jwt ? <WrapperHeaderButtonLogin /> : <WrapperHeaderButtonUser />}
+                    {(!jwt || error==true) ? <WrapperHeaderButtonLogin /> : <WrapperHeaderButtonUser />}
                 </Col>
             </WrapperHeader>
         </div>

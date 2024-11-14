@@ -24,6 +24,18 @@ export const WrapperStyleStatusTask = styled.div`
     margin-top: 30px;
     margin-right: 80px;
 `
+export const WrapperStyleAssignTo = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+    margin-right: 80px;
+`
+export const WrapperStyleProject = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+    margin-right: 80px;
+`
 
 export const WrapperStyleDate = styled.div`
     display: flex;
@@ -64,6 +76,11 @@ export const WrapperStyleUpdateTaskButton = styled(Button)`
     width: 150px;
     margin-right: 20px;
 `
+export const WrapperStyleRemoveFromProjectButton = styled(Button)`
+    border: 1px solid brown;
+    width: 150px;
+    margin-right: 20px;
+`
 export const WrapperStyleAddUserButton = styled(Button)`
     border: 1px solid blue;
     width: 150px;
@@ -74,7 +91,7 @@ export const WrapperStyleDeleteButton = styled(Button)`
     width: 150px;
 `
 export const WrapperStyleUpdate = styled.div`
-    margin-left: 735px;
+    margin-left: 562px;
     display: flex;
 `
 

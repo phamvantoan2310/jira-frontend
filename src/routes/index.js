@@ -7,6 +7,8 @@ import HomePage from '../pages/HomePage/HomePage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import { RegisterPage } from '../pages/RegisterPage/RegisterPage';
+import ForgotPasswordPage from '../pages/ForgotPassword/ForgotPasswordPage';
+import ChangePasswordPage from '../pages/ChangePasswordPage/ChangePasswordPage';
 
 
 export const routes = [
@@ -53,6 +55,16 @@ export const routes = [
     {
         path: '/user/userdetail',
         page: UserDetailPage,
+        isShowHeader: true
+    },
+    {
+        path: '/forgotpassword',
+        page: ForgotPasswordPage,
+        isShowHeader: true
+    },
+    {
+        path: '/changepassword/:email',
+        page: ChangePasswordPage,
         isShowHeader: true
     }
 ]

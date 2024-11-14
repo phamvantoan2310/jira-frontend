@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { WrapperStyleAddTaskForm, WrapperStyleAddUserForm, WrapperStyleDate, WrapperStyleInstruction, WrapperStyleInstructionFile, WrapperStyleStatusProject } from "./Style";
 import {
     FileWordFilled,
@@ -7,6 +7,10 @@ import {
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Input } from "antd";
+import { DatePicker } from 'antd';
+import moment from "moment";
+
+const { RangePicker } = DatePicker;
 
 export const StatusComponent = ({ status }) => {
     return (
@@ -18,23 +22,71 @@ export const StatusComponent = ({ status }) => {
 }
 
 export const DateComponent = ({ dueDate, startDate }) => {
+    console.log(startDate, dueDate);
+    const [dateRange, setDateRange] = useState([null, null]);
+
+    useEffect(() => {
+        if (startDate && dueDate) {
+            setDateRange([moment(startDate), moment(dueDate)]);
+        }
+    }, [startDate, dueDate]);
+
     return (
         <WrapperStyleDate>
-            <p style={{ color: "#6699ff" }}>Start: {startDate}</p>
-            <p style={{ color: "orange" }}>Due: {dueDate}</p>
+            <RangePicker
+                status="error"
+                value={dateRange}
+                style={{ fontSize: "30px", fontWeight: "bold" }}
+                disabled
+            />
         </WrapperStyleDate>
     );
 }
 
 export const InstructionProjectComponent = ({ content, instructionFile }) => {
+    const [pdfUrl, setPdfUrl] = useState(null);
+    useEffect(() => {
+        if (instructionFile) {
+            const base64String = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${instructionFile}`;
+
+            // Chuyển đổi Base64 thành Blob
+            const base64ToBlob = (base64Data, contentType) => {
+                const byteCharacters = atob(base64Data.split(',')[1]);
+                const byteArrays = [];
+
+                for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                    const slice = byteCharacters.slice(offset, offset + 512);
+
+                    const byteNumbers = new Array(slice.length);
+                    for (let i = 0; i < slice.length; i++) {
+                        byteNumbers[i] = slice.charCodeAt(i);
+                    }
+
+                    const byteArray = new Uint8Array(byteNumbers);
+                    byteArrays.push(byteArray);
+                }
+
+                return new Blob(byteArrays, { type: contentType });
+            };
+
+            // Chuyển Base64 thành Blob và tạo URL
+            const pdfBlob = base64ToBlob(base64String, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+            const url = URL.createObjectURL(pdfBlob);
+
+            // Lưu URL
+            setPdfUrl(url);
+        }
+    }, [instructionFile]);
+
+
     return (
         <WrapperStyleInstruction>
             <div style={{ display: "flex" }}>
-                <p style={{ marginRight: "30px", color: "gray" }}>Note: </p>
+                <p style={{ color: "gray" }}>Note: </p>
                 <p>{content}</p>
             </div>
-            <WrapperStyleInstructionFile href={instructionFile} target="_blank" rel="noopener noreferrer">
-                File mô tả chi tiết.doc
+            <WrapperStyleInstructionFile href={pdfUrl} download="instruction-file.docx" style={{ textDecoration: 'underline' }}>
+                tải file hướng dẫn
                 <FileWordFilled />
             </WrapperStyleInstructionFile>
         </WrapperStyleInstruction>
@@ -95,7 +147,7 @@ export const FreeTaskListComponent = ({ tasks, projectId, onClose }) => {
     )
 }
 
-export const AddUserComponent = ({projectId, onClose}) => {
+export const AddUserComponent = ({ projectId, onClose }) => {
     const token = localStorage.getItem("tokenLogin");
 
     const [listUser, setListUser] = useState([])
@@ -104,30 +156,30 @@ export const AddUserComponent = ({projectId, onClose}) => {
 
     const handleAddUserToList = () => {
         if (userId != "") {
-            if(listUser.length <= 9){
+            if (listUser.length <= 9) {
                 setListUser([...listUser, userId]);
             }
         }
     }
 
-    const handleAddUserToProject = async() =>{
+    const handleAddUserToProject = async () => {
         const endpoint = `${process.env.REACT_APP_API_KEY}/project/addusertoproject/${projectId}`
         try {
             const response = await fetch(endpoint, {
                 method: 'PUT',
                 headers: {
-                    'Content-type' : 'application/json',
-                    'Authorization' : `Bearer ${token}`,
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({users : listUser}),
+                body: JSON.stringify({ users: listUser }),
             });
 
-            if(!response){
+            if (!response) {
                 throw new Error("add user to project fail");
             }
 
             const result = await response.json();
-            if(result.status === 'OK'){
+            if (result.status === 'OK') {
                 alert(`add user success, ${result.data.data.length} user not found!`);
             }
         } catch (error) {
@@ -138,7 +190,7 @@ export const AddUserComponent = ({projectId, onClose}) => {
 
     return (
         <WrapperStyleAddUserForm>
-            <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "1px" }} onClick={onClose}/>
+            <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "1px" }} onClick={onClose} />
             <h3>Add User</h3>
 
             <div style={{ display: "flex" }}>
@@ -147,10 +199,10 @@ export const AddUserComponent = ({projectId, onClose}) => {
             </div>
 
             {listUser.map(userId => (
-                <Button style={{width: "300px", marginTop: "20px", marginRight: "10px"}}>{userId}</Button>
+                <Button style={{ width: "300px", marginTop: "20px", marginRight: "10px" }}>{userId}</Button>
             ))}
 
-            <Button style={{marginTop:"70px",marginLeft:"305px", display:"block", backgroundColor:"grey"}} onClick={handleAddUserToProject}>Submit</Button>
+            <Button style={{ marginTop: "70px", marginLeft: "305px", display: "block", backgroundColor: "grey" }} onClick={handleAddUserToProject}>Submit</Button>
 
         </WrapperStyleAddUserForm >
     )

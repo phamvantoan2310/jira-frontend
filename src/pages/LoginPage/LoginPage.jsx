@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input } from 'antd';
 import { WrapperStyleLoginForm, WrapperStyleLoginLable, WrapperStyleLoginPage } from "../../components/LoginComponent/Style";
-import { RegisterLinkComponent } from "../../components/LoginComponent/Component";
+import { ForgotPasswordLinkComponent, RegisterLinkComponent } from "../../components/LoginComponent/Component";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -82,20 +82,13 @@ const LoginPage = () => {
                     <Input.Password onChange={(e) => setPassword(e.target.value)} />
                 </Form.Item>
 
-                <Form.Item
-                    name="remember"
-                    valuePropName="checked"
-                    wrapperCol={{ offset: 8, span: 16 }}
-                >
-                    <Checkbox>Remember me</Checkbox>
-                </Form.Item>
-
+                <ForgotPasswordLinkComponent></ForgotPasswordLinkComponent>
                 <RegisterLinkComponent></RegisterLinkComponent>
                 {error && <div style={{ color: 'red', marginLeft:"50px", marginBottom:"40px" }}>{error}</div>}
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button type="primary" htmlType="submit" onClick={() => handleLogin()}>
-                        Submit
+                        Login
                     </Button>
                 </Form.Item>
             </WrapperStyleLoginForm>

@@ -13,7 +13,7 @@ import { DatePicker, Form, Input, Upload } from 'antd';
 
 const { TextArea } = Input;
 
-export const UpdateProject = ({ projectName, description, startDate, dueDate, projectId, onClose }) => {  //nhận onClose từ detailTaskForm để đóng form
+export const UpdateProject = ({ projectName, description, startDate, dueDate, projectId, onClose }) => {  //nhận onClose từ detailProjectForm để đóng form
 
     const token = localStorage.getItem("tokenLogin");
 
@@ -65,7 +65,7 @@ export const UpdateProject = ({ projectName, description, startDate, dueDate, pr
             updateData.due_date = moment(dueDateUpdate).format("YYYY-MM-DD").toString();
         }
         if (instructionFile) {
-            updateData.instructionFile = instructionFile;
+            updateData.instruction_file = instructionFile;
         }
 
         try {
