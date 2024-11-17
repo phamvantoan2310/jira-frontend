@@ -4,7 +4,7 @@ import styled from "styled-components"
 export const WrapperStyleUpdateForm = styled.div`
     width: 700px;
     height: 600px;
-    background-color: #e6e6e6;
+    background-color: #e4e3e8;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -13,6 +13,7 @@ export const WrapperStyleUpdateForm = styled.div`
     padding: 20px;
     text-align: center;
     padding: 20px;
+    border: 1px solid violet;
     border-radius: 10px;
 `
 

@@ -1,10 +1,11 @@
-import { Card, Dropdown, Space } from "antd";
+import { Button, Card, Dropdown, Space } from "antd";
 import React, { useEffect, useState } from "react";
 import {
     StarFilled,
     ClockCircleOutlined,
     RightCircleOutlined,
-    FilterOutlined
+    FilterOutlined,
+    FolderAddOutlined
 } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +13,7 @@ export const CardComponent = ({ IdProject, NameProject, Status, DueDate, StartDa
 
     const navigate = useNavigate();
 
-    const handleLinkToDetailProject = () =>{
+    const handleLinkToDetailProject = () => {
         TypeProject ? navigate(`/project/${IdProject}`) : navigate(`/task/${IdProject}`);
     }
 
@@ -20,9 +21,9 @@ export const CardComponent = ({ IdProject, NameProject, Status, DueDate, StartDa
 
 
     return (
-        <Card title={NameProject} bordered={false} style={{ width: "250px", height: "340px" }}>
-            <div style={{ marginTop: "-80px", marginLeft: "200px", fontSize: "20px" }}>
-                <RightCircleOutlined style={{ color: "#3399ff" }} onClick={()=>handleLinkToDetailProject()}/>
+        <Card title={NameProject} bordered={false} style={{ width: "260px", height: "300px" }}>
+            <div style={{ marginTop: "-80px", marginLeft: "210px", fontSize: "20px" }}>
+                <RightCircleOutlined style={{ color: "#3399ff" }} onClick={() => handleLinkToDetailProject()} />
             </div>
 
 
@@ -59,7 +60,7 @@ export const CardComponent = ({ IdProject, NameProject, Status, DueDate, StartDa
                     </div>
                 </div>
             </div>
-            <div style={{ marginTop: "55px", display: "flex", justifyContent: "center", color: "gray" }}>
+            <div style={{ marginTop: "30px", display: "flex", justifyContent: "center", color: "gray" }}>
                 ID: {IdProject}
             </div>
         </Card>
@@ -71,7 +72,7 @@ export const CardComponent = ({ IdProject, NameProject, Status, DueDate, StartDa
 
 // DropDown
 
-export const DropDownOptionFilter = ({items}) => {
+export const DropDownOptionFilter = ({ items }) => {
     return (
         <div>
             <Dropdown
@@ -81,11 +82,23 @@ export const DropDownOptionFilter = ({items}) => {
             >
                 <a onClick={(e) => e.preventDefault()}>
                     <Space>
-                    <FilterOutlined/>
+                        <FilterOutlined />
                     </Space>
                 </a>
             </Dropdown>
         </div>
 
+    );
+}
+export const WrapperCreateButton = (props) => {
+    const { size, type } = props;
+    const navigate = useNavigate();
+    const handleLinkToCreateMission = () => {
+        type == "project" ? navigate("/project/createproject") : navigate("/task/createtask");
+    }
+    return (
+        <div>
+            <Button size={size} style={{ backgroundColor: "#809fff", width: "150px", color: "white" }} onClick={() => handleLinkToCreateMission()}><FolderAddOutlined /></Button>
+        </div>
     );
 }

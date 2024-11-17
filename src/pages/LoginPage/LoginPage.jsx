@@ -34,7 +34,6 @@ const LoginPage = () => {
             data => {
                 if (data.status === "OK") {
                     const jwt = data.jwt;
-                    console.log(jwt)
                     //lưu token vào localStorage
                     localStorage.setItem('tokenLogin', jwt);
                     navigate("/");

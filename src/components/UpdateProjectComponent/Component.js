@@ -17,8 +17,6 @@ export const UpdateProject = ({ projectName, description, startDate, dueDate, pr
 
     const token = localStorage.getItem("tokenLogin");
 
-    console.log(startDate, dueDate)
-
     const validStartDate = moment(startDate, "YYYY-MM-DD", true);  //format string sang date
     const validDueDate = moment(dueDate, "YYYY-MM-DD", true);
 
@@ -88,6 +86,7 @@ export const UpdateProject = ({ projectName, description, startDate, dueDate, pr
                 result => {
                     if (result.status === "OK") {
                         alert("update success");
+                        navigate(0);
                         console.log(result);
                     }
                 }

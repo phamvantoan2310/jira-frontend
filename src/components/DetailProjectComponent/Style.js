@@ -3,10 +3,6 @@ import React from "react";
 import styled from "styled-components";
 
 export const WrapperStyleDetailProject = styled.div`
-    margin: 120px;
-    background-color: #f2f2f2;
-    height: 1100px;
-    margin-top: 0px;
     font-family: Arial;
     font-size: 20px;
 `
@@ -33,39 +29,27 @@ export const WrapperStyleDate = styled.div`
     margin-left: 100px;
     margin-top : 50px;
     font-size: 20px;
-    width : 300px;
+    width : 300px; 
 `
 export const WrapperStyleInstructionFile = styled(Button)`
     text-decoration: none;
     color: gray;
+    border : 1px solid black;   
 `
 
 export const WrapperStyleInstruction = styled.div`
     margin-left: 100px;
     margin-top : 50px;
 `
-
-export const WrapperStyleTaskInProject = styled.div`
-    margin-left: 50px;
-`
 export const WrapperStyleUserInProject = styled.div`
     margin-left: 50px;
-    margin-bottom: 50px;
-    display: flex;
-    flex-wrap: wrap; /* Để các nút có thể xuống dòng khi không đủ không gian */ 
+    padding: 20px;
+    gap: 5px;
 `
 
 export const WrapperStyleTaskButton = styled(Button)`
-    width: 500px;
-    margin-top: 20px;
-    margin-right: 20px
-`
-
-export const WrapperStyleUserButton = styled(Button)`
-    width: 500px;
-    margin-top: 20px;
-    margin-right: 20px;
-    margin-left: 80px;
+    width: 150px;
+    height: 150px;
 `
 
 export const WrapperStyleUpdateProjectButton = styled(Button)`
@@ -76,7 +60,7 @@ export const WrapperStyleUpdateProjectButton = styled(Button)`
 export const WrapperStyleAddUserButton = styled(Button)`
     border: 1px solid blue;
     width: 150px;
-    margin-right: 20px;
+    margin-left : 600px;
 `
 export const WrapperStyleDeleteButton = styled(Button)`
     border: 1px solid red;
@@ -87,17 +71,17 @@ export const WrapperStyleDeleteButton = styled(Button)`
 export const WrapperStyleAddTaskButton = styled(Button)`
     border: 1px solid green;
     width: 150px;
-    
+    margin-left: 490px;
+    margin-bottom: 20px;
 `
 export const WrapperStyleUpdate = styled.div`
-    margin-left: 565px;
     display: flex;
 `
 
 export const WrapperStyleAddTaskForm = styled.div`
     width: 700px;
     height: 600px;
-    background-color: #e6e6e6;
+    background-color: #e4e3e8;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -106,12 +90,13 @@ export const WrapperStyleAddTaskForm = styled.div`
     padding: 20px;
     text-align: center;
     padding: 20px;
+    border: 1px solid violet;
     border-radius: 10px;
 `
 export const WrapperStyleAddUserForm = styled.div`
     width: 700px;
     height: 600px;
-    background-color: #e6e6e6;
+    background-color: #e4e3e8;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -120,5 +105,36 @@ export const WrapperStyleAddUserForm = styled.div`
     padding: 20px;
     text-align: center;
     padding: 20px;
+    border: 1px solid violet;
+    border-radius: 10px;
+`
+
+export const WrapperStyleFilter = styled.div`
+    display: flex;
+    font-size: 20px;
+    align-items: center;
+    margin-right: 100px;
+`
+export const WrapperStyleDescription = styled.div`
+    width: 700px;
+    height: 300px;
+    background-color: gray;
+    color: white;
+    position: fixed;
+    top: 30%;
+    left: 27%;
+    padding: 10px;
+    border-radius: 10px;
+`
+export const WrapperStyleUserInformation = styled.div`
+    width: 500px;
+    height: 300px;
+    background-color: #e4e3e8;
+    color: gray;
+    position: fixed;
+    top: 30%;
+    left: 33%;
+    border: 1px solid violet;
+    padding: 10px;
     border-radius: 10px;
 `

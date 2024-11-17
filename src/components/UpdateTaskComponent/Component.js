@@ -15,8 +15,6 @@ export const UpdateTask = ({ taskName, description, startDate, dueDate, taskId, 
 
     const token = localStorage.getItem("tokenLogin");
 
-    console.log(startDate, dueDate);
-
     const validStartDate = moment(startDate, "YYYY-MM-DD", true);  //format string sang date
     const validDueDate = moment(dueDate, "YYYY-MM-DD", true);
 
@@ -66,8 +64,6 @@ export const UpdateTask = ({ taskName, description, startDate, dueDate, taskId, 
             updateData.instruction_file = instructionFile;
         }
 
-        console.log(updateData)
-
         try {
             await fetch(endpoint, {
                 method: 'PUT',
@@ -88,8 +84,7 @@ export const UpdateTask = ({ taskName, description, startDate, dueDate, taskId, 
                 result => {
                     if (result.status === "OK") {
                         alert("update success");
-                        console.log(result);
-                        navigate(`/task/${taskId}`);
+                        navigate(0);
                     }
                 }
             )
@@ -108,8 +103,8 @@ export const UpdateTask = ({ taskName, description, startDate, dueDate, taskId, 
 
     return (
         <WrapperStyleUpdateForm>
-            <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end" }} onClick={onClose} />
-            <h2>
+            <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end",fontSize:"20px" }} onClick={onClose} />
+            <h2 style={{fontSize:"35px"}}>
                 Update Task
             </h2>
             <WrapperStyleUpdateTaskForm labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} layout="horizontal">

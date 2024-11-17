@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { WrapperStyleAddUserButton, WrapperStyleDeleteButton, WrapperStyleDetaiTask, WrapperStyleRemoveFromProjectButton, WrapperStyleTaskName, WrapperStyleUpdate, WrapperStyleUpdateTaskButton } from "../../components/DetailTaskComponent/Style";
-import { AddUserToTaskComponent, AssignToComponent, DateComponent, InstructionTaskComponent, StatusComponent, TaskInProjectComponent, TaskResponseComponent } from "../../components/DetailTaskComponent/Component";
+import { AddUserToTaskComponent, AssignToComponent, DateComponent, DescriptionComponent, InstructionTaskComponent, StatusComponent, TaskInProjectComponent, TaskResponseComponent } from "../../components/DetailTaskComponent/Component";
 import { UpdateTask } from "../../components/UpdateTaskComponent/Component";
 
 import {
     CloseCircleFilled
 } from '@ant-design/icons';
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
+import { Col, Row } from "antd";
 
 export const DetailTaskPage = () => {
     const { IdTask } = useParams();
@@ -40,13 +41,13 @@ export const DetailTaskPage = () => {
 
                 if (!response.ok) {
                     const errorResult = await response.json();
-                    if(errorResult.message == "token expired"){
+                    if (errorResult.message == "token expired") {
                         alert("Phiên đăng nhập hết hạn!");
                         setIsExpiredToken(true);
                     }
                     throw new Error("get task fail");
                 }
-                
+
                 setIsExpiredToken(false);
                 const responseData = await response.json();
                 setTask(responseData.data);
@@ -100,7 +101,7 @@ export const DetailTaskPage = () => {
     }
 
     //remove from project
-    const handleRemoveFromProject = async() =>{
+    const handleRemoveFromProject = async () => {
         try {
             const endpoint = `${process.env.REACT_APP_API_KEY}/task//removefromproject/${IdTask}`;
             const response = await fetch(endpoint, {
@@ -186,39 +187,57 @@ export const DetailTaskPage = () => {
         }
     })
 
+    //show description  show ở InstructionProjectComponent, close ở DescriptionComponent
+    const [isShowDescription, setIsShowDesCription] = useState(false);
+
 
     return (
         <div>
-            <HeaderComponent error={isExpiredToken}/>
-            <WrapperStyleDetaiTask>
-                <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "5px" }} onClick={() => handleLinkToHomePage()} />
-                <WrapperStyleTaskName>
-                    {task?.name}
-                </WrapperStyleTaskName>
+            <HeaderComponent error={isExpiredToken} />
+            <div style={{ height: '100vh', padding: '20px' }}>
+                <Row type="flex" style={{ height: '100%' }} justify="space-around" align="middle">
+                    <Col flex="auto" style={{ backgroundColor: '#f0f0f0', height: '100%' }}>
+                        <WrapperStyleTaskName>
+                            {task?.name}
+                        </WrapperStyleTaskName>
+                        <div style={{ height: '50%' }}>
+                            <StatusComponent status={task?.status} />
+                            <DateComponent startDate={task?.start_date} dueDate={task?.due_date} />
+                            <InstructionTaskComponent content={task?.description} instructionFile={task?.instruction_file} showDescription={() => setIsShowDesCription(true)} />
+                        </div>
+                        <div style={{ height: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <WrapperStyleUpdateTaskButton onClick={handleIsShowUpdateForm}>Update Task</WrapperStyleUpdateTaskButton>
+                            <WrapperStyleDeleteButton onClick={handleDeleteTask}>Delete</WrapperStyleDeleteButton>
+                        </div>
+                    </Col>
+                    <Col flex="auto" style={{ backgroundColor: '#d9d9d9', height: '100%', width: "750px" }}>
+                        <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "5px", fontSize: "20px" }} onClick={() => handleLinkToHomePage()} />
+                        <p style={{ color: "#4d4d4d", fontWeight: "bold", fontSize: "20px", margin: "5px" }}>Task detail</p>
+                        <div style={{ height: '100vh', padding: '20px' }}>
+                            <Row style={{ height: '100%' }}>
+                                <Col span={24} style={{ backgroundColor: 'white', height: '40%', marginBottom: "-100px", borderRadius: "10px" }}>
+                                    <p style={{ color: "gray", fontWeight: "bold", fontSize: "15px", margin: "5px" }}>project</p>
+                                    <TaskInProjectComponent projectName={project?.name} projectId={project?._id} status={project?.status} startDate={project?.start_date} dueDate={project?.due_date} />
+                                    <WrapperStyleRemoveFromProjectButton onClick={handleRemoveFromProject}>Remove from project</WrapperStyleRemoveFromProjectButton>
+                                </Col>
+                                <Col span={24} style={{ backgroundColor: '#f0f0f0', height: '40%', borderRadius: "10px" }}>
+                                    <p style={{ color: "gray", fontWeight: "bold", fontSize: "20px", margin: "5px" }}>assign to</p>
+                                    <AssignToComponent emailUser={assign_to?.email} name={assign_to?.name} phonenumber={assign_to?.phone_number} />
+                                    <WrapperStyleAddUserButton onClick={handleIsShowAddUserForm}>Assign User</WrapperStyleAddUserButton>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
 
-                <StatusComponent status={task?.status} />
-                <DateComponent startDate={task?.start_date} dueDate={task?.due_date} />
-                <TaskInProjectComponent projectName={project?.name} projectId={project?._id}/>
-                <AssignToComponent emailUser={assign_to?.email} />
+            {/* <TaskResponseComponent /> */}
 
+            {isShowUpdateForm && <UpdateTask taskName={task?.name} description={task?.description} startDate={task?.start_date} dueDate={task?.due_date} taskId={task?._id} onClose={handleIsShowUpdateForm} />}  {/* truyền hàm handleIsShowUpdateFrom để đóng updateform*/}
+            {isShowAddUserForm && <AddUserToTaskComponent projectId={task?.project ? task.project._id : ""} taskId={task?._id} onClose={handleIsShowAddUserForm} />}
+            {isShowDescription && <DescriptionComponent description={task?.description} hiddenDescription={() => setIsShowDesCription(false)} />}
 
-                <InstructionTaskComponent content={task?.description} instructionFile={task?.instruction_file} />
-
-                <hr style={{ margin: "50px" }} />
-
-                <TaskResponseComponent />
-                <hr style={{ margin: "50px" }} />
-
-                <WrapperStyleUpdate>
-                    <WrapperStyleRemoveFromProjectButton onClick={handleRemoveFromProject}>Remove from project</WrapperStyleRemoveFromProjectButton>
-                    <WrapperStyleUpdateTaskButton onClick={handleIsShowUpdateForm}>Update Task</WrapperStyleUpdateTaskButton>
-                    <WrapperStyleAddUserButton onClick={handleIsShowAddUserForm}>Assign User</WrapperStyleAddUserButton>
-                    <WrapperStyleDeleteButton onClick={handleDeleteTask}>Delete</WrapperStyleDeleteButton>
-                </WrapperStyleUpdate>
-
-                {isShowUpdateForm && <UpdateTask taskName={task?.name} description={task?.description} startDate={task?.start_date} dueDate={task?.due_date} taskId={task?._id} onClose={handleIsShowUpdateForm} />}  {/* truyền hàm handleIsShowUpdateFrom để đóng updateform*/}
-                {isShowAddUserForm && <AddUserToTaskComponent projectId={task?.project ? task.project._id : ""} taskId={task?._id} onClose={handleIsShowAddUserForm} />}
-            </WrapperStyleDetaiTask>
+           
         </div>
     );
 }

@@ -14,6 +14,7 @@ export const WrapperStyleUpdateForm = styled.div`
     text-align: center;
     padding: 20px;
     border-radius: 10px;
+    font-family: Arial;
 `
 
 export const WrapperStyleUpdateTaskForm = styled(Form)`

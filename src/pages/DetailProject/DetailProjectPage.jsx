@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { WrapperStyleAddTaskButton, WrapperStyleAddUserButton, WrapperStyleDeleteButton, WrapperStyleDetailProject, WrapperStyleProjectName, WrapperStyleTaskButton, WrapperStyleTaskInProject, WrapperStyleUpdate, WrapperStyleUpdateProjectButton, WrapperStyleUserButton, WrapperStyleUserInProject } from "../../components/DetailProjectComponent/Style";
-import { AddUserComponent, DateComponent, FreeTaskListComponent, InstructionProjectComponent, StatusComponent } from "../../components/DetailProjectComponent/Component";
+import { WrapperStyleAddTaskButton, WrapperStyleAddUserButton, WrapperStyleDeleteButton, WrapperStyleDetailProject, WrapperStyleFilter, WrapperStyleProjectName, WrapperStyleTaskButton, WrapperStyleTaskInProject, WrapperStyleUpdate, WrapperStyleUpdateProjectButton, WrapperStyleUserButton, WrapperStyleUserInProject } from "../../components/DetailProjectComponent/Style";
+import { AddUserComponent, DateComponent, DescriptionComponent, DropDownOptionFilter, FreeTaskListComponent, InstructionProjectComponent, StatusComponent, UserInformationComponent } from "../../components/DetailProjectComponent/Component";
 import {
     CheckOutlined,
     CloseOutlined,
     PlayCircleOutlined,
     CloseCircleFilled,
+    ManOutlined,
+    WomanOutlined,
+    ProjectOutlined,
+    TeamOutlined,
+    UserAddOutlined,
+    FolderAddOutlined
 } from '@ant-design/icons';
 import { UpdateProject } from "../../components/UpdateProjectComponent/Component";
 import moment from "moment";
@@ -32,6 +38,57 @@ export const DetailProjectPage = () => {
     const [Project, setProject] = useState();
     const [TasksInProject, setTasksInProject] = useState([]);
     const [UserInProject, setUserInProject] = useState([]);
+
+
+    //filter
+    const items = [
+        {
+            label: (
+                <a target="_blank" onClick={() => { setIsFilter(false) }}>
+                    Bỏ lọc
+                </a>
+            ),
+            key: '0',
+        },
+        {
+            label: (
+                <a target="_blank" onClick={() => { setIsFilter(true); setStatusFilter("In-Progress") }}>
+                    In-Progress
+                </a>
+            ),
+            key: '1',
+        },
+        {
+            label: (
+                <a target="_blank" onClick={() => { setIsFilter(true); setStatusFilter("Complete") }}>
+                    Complete
+                </a>
+            ),
+            key: '2',
+        },
+        {
+            label: (
+                <a target="_blank" onClick={() => { setIsFilter(true); setStatusFilter("Not-Started") }}>
+                    Not-Started
+                </a>
+            ),
+            key: '3',
+        },
+
+    ];
+
+    const [inProgressTasks, setTaskInProgress] = useState([]);
+    const [NotStartedTasks, setTaskNotStarted] = useState([]);
+    const [CompletedTasks, setTaskCompleted] = useState([]);
+
+    const [statusFilter, setStatusFilter] = useState("");
+
+    const [isFilter, setIsFilter] = useState(false);
+    useEffect(() => {
+        setTaskInProgress(TasksInProject.filter(task => (task.status == "In-Progress")))
+        setTaskCompleted(TasksInProject.filter(task => (task.status == "Complete")))
+        setTaskNotStarted(TasksInProject.filter(task => (task.status == "Not-Started")))
+    }, [isFilter])
 
 
     //free task
@@ -186,7 +243,6 @@ export const DetailProjectPage = () => {
             const result = await response.json();
             if (result.status === "OK") {
                 setTasks(result.result.data);
-                console.log(result.result.data);
             } else {
                 console.log(result.status);
                 alert(result.message);
@@ -210,13 +266,6 @@ export const DetailProjectPage = () => {
 
     const handleIsShowAddUser = () => {
         setIsShowAddUser(isShowAddUser ? false : true);
-    }
-
-
-    //show user list in project 
-    const [isShowMemberList, setIsShowMemberList] = useState(false);
-    const handleShowMemberList = () => {
-        setIsShowMemberList(isShowMemberList ? false : true);
     }
 
     //remove user from project 
@@ -249,12 +298,34 @@ export const DetailProjectPage = () => {
         }
     }
 
+    //show description  show ở InstructionProjectComponent, close ở DescriptionComponent
+    const [isShowDescription, setIsShowDesCription] = useState(false);
+
+
+    //show members or tasks
+    const [isShow, setIsShow] = useState(true);
+
+    //show information user
+    const [isShowUser, setIsShowUser] = useState(false);
+
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [id, setId] = useState("")
+
+    const setInformation = (email, name, phoneNumber, id) => {
+        setEmail(email);
+        setName(name);
+        setPhoneNumber(phoneNumber);
+        setId(id);
+    }
 
     return (
-        <div>
+        <WrapperStyleDetailProject>
             <HeaderComponent error={isExpiredToken} />
-            <div style={{ height: '100vh', padding: '20px', marginBottom:"100px" }}>
+            <div style={{ height: '100vh', padding: '20px', marginBottom: "100px" }}>
                 <Row type="flex" style={{ height: '100%' }} justify="space-around" align="middle">
+
                     <Col flex="auto" style={{ backgroundColor: '#f0f0f0', height: '100%' }}>
                         <WrapperStyleProjectName>
                             {Project?.name}
@@ -262,70 +333,122 @@ export const DetailProjectPage = () => {
                         <div style={{ height: '50%' }}>
                             <StatusComponent status={Project?.status} />
                             <DateComponent startDate={Project?.start_date} dueDate={Project?.due_date} />
-                            <InstructionProjectComponent content={Project?.description} instructionFile={Project?.instruction_file} />
+                            <InstructionProjectComponent content={Project?.description} instructionFile={Project?.instruction_file} showDescription={() => setIsShowDesCription(true)} />
                         </div>
                         <div style={{ height: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            Cột 1
+                            <WrapperStyleUpdateProjectButton onClick={handleIsShowUpdateForm}>Update Project</WrapperStyleUpdateProjectButton>
+                            <WrapperStyleDeleteButton onClick={handleDeleteProject}>Delete</WrapperStyleDeleteButton>
                         </div>
                     </Col>
-                    <Col flex="auto" style={{ backgroundColor: '#d9d9d9', height: '100%' }}>
-                        <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            Cột 2
+
+
+                    {/* tasks list */}
+                    {isShow && <Col flex="auto" style={{ backgroundColor: '#d9d9d9', height: '100%', width: "750px" }}>
+                        <div style={{ display: "flex" }}>
+                            <TeamOutlined style={{ fontSize: "30px", margin: "10px" }} onClick={() => (setIsShow(false))} />
+                            <CloseCircleFilled style={{ padding: "3px", fontSize: "20px", marginLeft: "785px" }} onClick={() => handleLinkToHomePage()} />
                         </div>
-                    </Col>
-                    <Col flex="auto" style={{ backgroundColor: '#bfbfbf', height: '100%' }}>
-                        <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "3px", fontSize: "20px" }} onClick={() => handleLinkToHomePage()} />
-                        <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            Cột 3
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <p style={{ color: "gray", fontWeight: "bold", fontSize: "20px", margin: "20px" }}>Tasks:</p>
+                            <WrapperStyleFilter>
+                                <DropDownOptionFilter items={items}></DropDownOptionFilter>
+                            </WrapperStyleFilter>
                         </div>
-                    </Col>
+
+                        <WrapperStyleAddTaskButton onClick={() => { handleGetAllTask(); handleIsShowListTask(); }}><FolderAddOutlined style={{ fontSize: "20px" }} /></WrapperStyleAddTaskButton>
+
+                        <div style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '20px',
+                            marginLeft: "150px",
+                            width: "600px",
+                            height: "500px",
+                            overflowY: "auto", //scroll theo chiều dọc
+                            overflowX: "hidden", // Ẩn scroll ngang
+
+                        }}>
+                            {!isFilter
+                                ?
+                                TasksInProject.map((task) => {       //filter false => lấy toàn bộ Task
+                                    return (
+                                        task.status == "In-Progress" ?
+                                            <WrapperStyleTaskButton style={{ backgroundColor: "green", color: "white" }} onClick={() => handleLinkToTask(task._id)}>{task.name}<PlayCircleOutlined /></WrapperStyleTaskButton> :
+                                            task.status == "Complete" ?
+                                                <WrapperStyleTaskButton type="primary" onClick={() => handleLinkToTask(task.id)}>{task.name}<CheckOutlined /></WrapperStyleTaskButton> :
+                                                <WrapperStyleTaskButton style={{ backgroundColor: "orange", color: "white" }} onClick={() => handleLinkToTask(task._id)}>{task.name}<CloseOutlined /></WrapperStyleTaskButton>
+                                    );
+                                })
+                                :
+                                (statusFilter == "In-Progress")         //filter true, status==In-progress ==> in-progress tasks
+                                    ?
+                                    inProgressTasks.map((task) => {
+                                        return (
+                                            <WrapperStyleTaskButton style={{ backgroundColor: "green", color: "white" }} onClick={() => handleLinkToTask(task._id)}>{task.name}<PlayCircleOutlined /></WrapperStyleTaskButton>
+                                        );
+                                    })
+                                    :
+                                    (statusFilter == "Complete")           //filter true, status==complete ==> complete tasks
+                                        ?
+                                        CompletedTasks.map((task) => {
+                                            return (
+                                                <WrapperStyleTaskButton type="primary" onClick={() => handleLinkToTask(task._id)}>{task.name}<PlayCircleOutlined /></WrapperStyleTaskButton>
+                                            );
+                                        })
+                                        :
+                                        NotStartedTasks.map((task) => {   ////filter true, status==not-started ==> not-started tasks
+                                            return (
+                                                <WrapperStyleTaskButton style={{ backgroundColor: "orange", color: "white" }} onClick={() => handleLinkToTask(task._id)}>{task.name}<PlayCircleOutlined /></WrapperStyleTaskButton>
+                                            );
+                                        })
+                            }
+                        </div>
+                    </Col>}
+
+
+                    {/* members list*/}
+                    {!isShow && <Col flex="auto" style={{ backgroundColor: '#bfbfbf', height: '100%', width: "750px" }}>
+                        <div style={{ display: "flex" }}>
+                            <ProjectOutlined style={{ fontSize: "30px", margin: "10px" }} onClick={() => setIsShow(true)} />
+                            <CloseCircleFilled style={{ padding: "3px", fontSize: "20px", marginLeft: "785px" }} onClick={() => handleLinkToHomePage()} />
+                        </div>
+
+                        <p style={{ color: "gray", fontWeight: "bold", fontSize: "20px", margin: "60px" }}>Members</p>
+                        <div style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            marginLeft: "50px",
+                            width: "800px",
+                            height: "500px",
+                            overflowY: "auto",
+                            overflowX: "hidden",
+                            gap: "10px",
+                        }}>
+                            <WrapperStyleUserInProject>
+                                {UserInProject.map((user) => {
+                                    return (
+                                        (<Button style={{ margin: "20px" }} onClick={() => { setIsShowUser(true); setInformation(user?.email, user?.name, user?.phone_number, user?._id) }}>
+                                            {user.email} {user.gender == "male" ? (<ManOutlined style={{ color: "blue" }} />) : (<WomanOutlined style={{ color: "pink" }} />)}
+                                        </Button>)
+                                    );
+                                })}
+                            </WrapperStyleUserInProject>
+                        </div>
+                        <WrapperStyleAddUserButton onClick={handleIsShowAddUser}><UserAddOutlined style={{ fontSize: "20px" }} /></WrapperStyleAddUserButton>
+                    </Col>}
                 </Row>
             </div>
 
-            <WrapperStyleDetailProject>
 
-                
 
-                <hr style={{ margin: "50px" }} />
 
-                <WrapperStyleTaskInProject>
-                    <p style={{ color: "gray" }}>Task:</p>
-                    {TasksInProject.map((task) => {
-                        return (
-                            task.status == "In-Progress" ?
-                                <WrapperStyleTaskButton style={{ backgroundColor: "green", color: "white", marginLeft: "80px" }} onClick={() => handleLinkToTask(task._id)}>{task.name}<PlayCircleOutlined /></WrapperStyleTaskButton> :
-                                task.status == "Completed" ?
-                                    <WrapperStyleTaskButton type="primary" style={{ marginLeft: "80px" }} onClick={() => handleLinkToTask(task.id)}>{task.name}<CheckOutlined /></WrapperStyleTaskButton> :
-                                    <WrapperStyleTaskButton style={{ backgroundColor: "orange", color: "white", marginLeft: "80px" }} onClick={() => handleLinkToTask(task._id)}>{task.name}<CloseOutlined /></WrapperStyleTaskButton>
-                        );
-                    })}
-                </WrapperStyleTaskInProject>
 
-                <hr style={{ margin: "50px", marginBottom: "20px" }} />
-                <Button style={{ marginLeft: "50px" }} onClick={handleShowMemberList}>Member list</Button>
-                {isShowMemberList &&
-                    <WrapperStyleUserInProject>
-                        {UserInProject.map((user) => {
-                            return (
-                                <div>
-                                    <WrapperStyleUserButton onClick={() => handleRemoveUserFromProject(user._id)}>{user.email}</WrapperStyleUserButton>
-                                </div>
-                            );
-                        })}
-                    </WrapperStyleUserInProject>
-                }
 
-                <WrapperStyleUpdate>
-                    <WrapperStyleUpdateProjectButton onClick={handleIsShowUpdateForm}>Update Project</WrapperStyleUpdateProjectButton>
-                    <WrapperStyleAddUserButton onClick={handleIsShowAddUser}>Add User</WrapperStyleAddUserButton>
-                    <WrapperStyleDeleteButton onClick={handleDeleteProject}>Delete</WrapperStyleDeleteButton>
-                    <WrapperStyleAddTaskButton onClick={() => { handleGetAllTask(); handleIsShowListTask(); }}>Add Task</WrapperStyleAddTaskButton>
-                </WrapperStyleUpdate>
-
-                {isShowUpdateForm && <UpdateProject projectName={Project?.name} description={Project?.description} startDate={Project?.start_date} dueDate={Project?.due_date} projectId={Project?._id} onClose={handleIsShowUpdateForm} />}
-                {isShowListTask && <FreeTaskListComponent tasks={Tasks} projectId={IdProject} onClose={handleIsShowListTask} />}
-                {isShowAddUser && <AddUserComponent projectId={IdProject} key={IdProject} onClose={handleIsShowAddUser} />}
-            </WrapperStyleDetailProject>
-        </div>
+            {isShowUpdateForm && <UpdateProject projectName={Project?.name} description={Project?.description} startDate={Project?.start_date} dueDate={Project?.due_date} projectId={Project?._id} onClose={handleIsShowUpdateForm} />}
+            {isShowListTask && <FreeTaskListComponent tasks={Tasks} projectId={IdProject} onClose={handleIsShowListTask} />}
+            {isShowAddUser && <AddUserComponent projectId={IdProject} key={IdProject} onClose={handleIsShowAddUser} />}
+            {isShowDescription && <DescriptionComponent description={Project?.description} hiddenDescription={() => setIsShowDesCription(false)} />}
+            {isShowUser && <UserInformationComponent email={email} id={id} name={name} phonenumber={phoneNumber} hiddenInformation={() => setIsShowUser(false)} removeFromProject={() => handleRemoveUserFromProject(id)} />}
+        </WrapperStyleDetailProject>
     );
 }

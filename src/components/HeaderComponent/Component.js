@@ -28,18 +28,7 @@ export const WrapperHeaderSearch = (props) => {
     );
 }
 
-export const WrapperHeaderButton = (props) => {
-    const { size, backgroundcolor, textbutton, typeMission } = props;
-    const navigate = useNavigate();
-    const handleLinkToCreateMission = ( typeMission ) => {
-        typeMission ? navigate("/project/createproject") : navigate("/task/createtask");
-    }
-    return (
-        <div>
-            <Button size={size} style={{ backgroundColor: backgroundcolor, marginLeft: "30px", width: "200px", color: "white" }} onClick={() => handleLinkToCreateMission(typeMission)}><AuditOutlined />{textbutton}</Button>
-        </div>
-    );
-}
+
 export const WrapperHeaderButtonLogin = () => {
     const navigate = useNavigate();
 

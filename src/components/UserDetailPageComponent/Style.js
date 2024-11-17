@@ -2,12 +2,14 @@ import { Button } from "antd";
 import styled from "styled-components";
 
 export const WrapperStyleDetailUser = styled.div`
-    margin: 120px;
+    margin-left: 400px;
     background-color: #f2f2f2;
-    height: 1100px;
-    margin-top: 0px;
+    height: 600px;
+    width: 700px;
+    margin-top: 30px;
     font-family: Arial;
     font-size: 20px;
+    border-radius: 10px;
 `
 export const WrapperStyleDetailUserTitle = styled.div`
     font-size: 30px;
@@ -20,19 +22,21 @@ export const WrapperStyleSubmitButton = styled(Button)`
     background-color: green;
     color: white;
     width: 140px;
-    margin-left: 340px;
+    margin-left: 100px;
+    margin-top: 20px;
 `
 export const WrapperStylePassWordButton = styled(Button)`
     background-color: green;
     color: white;
     width: 140px;
     margin-left: 40px;
+    margin-top: 20px;
 `
 
 export const WrapperStyleLogoutButton = styled(Button)`
     background-color: blue;
     color: white;
     width: 100px;
-    margin-left: 1000px;
-    margin-top: 150px;
+    margin-left: 570px;
+    margin-top: 30px;
 `

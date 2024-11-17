@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { WrapperStyleAddUserForm, WrapperStyleAssignTo, WrapperStyleDate, WrapperStyleFileResponse, WrapperStyleInstruction, WrapperStyleInstructionFile, WrapperStyleResponse, WrapperStyleStatusTask } from "./Style";
+import { WrapperStyleAddUserForm, WrapperStyleAssignTo, WrapperStyleDate, WrapperStyleDescription, WrapperStyleFileResponse, WrapperStyleInstruction, WrapperStyleInstructionFile, WrapperStyleProject, WrapperStyleResponse, WrapperStyleStatusTask } from "./Style";
 
 import {
     FileWordFilled,
     CloseCircleFilled,
+    MailOutlined,
+    SmileOutlined,
+    PhoneOutlined
 } from '@ant-design/icons';
 import { Button, Card, Input, List } from "antd";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
+import { DatePicker } from 'antd';
+const { RangePicker } = DatePicker;
 
 export const StatusComponent = ({ status }) => {
     return (
@@ -18,38 +24,80 @@ export const StatusComponent = ({ status }) => {
 }
 
 export const DateComponent = ({ dueDate, startDate }) => {
+    const [dateRange, setDateRange] = useState([null, null]);
+
+    useEffect(() => {
+        if (startDate && dueDate) {
+            setDateRange([moment(startDate), moment(dueDate)]);
+        }
+    }, [startDate, dueDate]);
     return (
         <WrapperStyleDate>
-            <p style={{ color: "#6699ff" }}>Start: {startDate}</p>
-            <p style={{ color: "orange" }}>Due: {dueDate}</p>
+            <RangePicker
+                status="warning"
+                value={dateRange}
+                style={{ fontSize: "30px", fontWeight: "bold" }}
+                disabled
+            />
         </WrapperStyleDate>
     );
 }
 
-export const AssignToComponent = ({ emailUser }) => {
+export const AssignToComponent = ({ emailUser, name, phonenumber }) => {
     return (
         <WrapperStyleAssignTo>
-            <p style={{ marginRight: "15px" }}>Assign to:</p>
-            <p style={{ color: "green" }}>{emailUser}</p>
+            <div style={{ display: "flex", fontSize:"20px" }}>
+                <SmileOutlined style={{marginRight:"15px", color:"black"}}/>
+                <p style={{ color: "gray" }}>{name}</p>
+            </div>
+            <div style={{ display: "flex", fontSize:"20px" }}>
+                <MailOutlined style={{marginRight:"15px", color:"black"}}/>
+                <p style={{ color: "gray" }}>{emailUser}</p>
+            </div>
+            <div style={{ display: "flex", fontSize:"20px" }}>
+                <PhoneOutlined style={{marginRight:"15px", color:"black"}}/>
+                <p style={{ color: "gray" }}>{phonenumber}</p>
+            </div>
+
         </WrapperStyleAssignTo>
     );
 }
 
-export const TaskInProjectComponent = ({ projectName, projectId }) => {
+export const TaskInProjectComponent = ({ projectName, projectId, startDate, dueDate, status }) => {
     const navigate = useNavigate();
-    const handleNavigateProjectDetail = () =>{
+    const handleNavigateProjectDetail = () => {
         navigate(`/project/${projectId}`)
     }
+
+    const [dateRange, setDateRange] = useState([null, null]);
+
+    useEffect(() => {
+        if (startDate && dueDate) {
+            setDateRange([moment(startDate), moment(dueDate)]);
+        }
+    }, [startDate, dueDate]);
+
     return (
-        <WrapperStyleAssignTo>
-            <p style={{ marginRight: "15px", marginTop:"7px" }}>Project name:</p>
-            <Button style={{backgroundColor:"#dbd6df", fontSize:"20px", border:"none"}} onClick={()=>handleNavigateProjectDetail()}><p style={{ color: "green" }}>{projectName}</p></Button>
-        </WrapperStyleAssignTo>
+        <WrapperStyleProject>
+            <div style={{ display: 'flex', gap: "10px" }}>
+                <div style={{ marginRight: "80px" }}>
+                    <Button style={{ fontSize: "40px", backgroundColor: "#2828d0", height: "60px", width: "300px" }} onClick={() => handleNavigateProjectDetail()}><p style={{ color: "white" }}>{projectName}</p></Button>
+                    <p style={{ paddingTop: "20px", fontSize: "20px", color: "green" }}>{status}</p>
+                </div>
+                <RangePicker
+                    status="warning"
+                    value={dateRange}
+                    style={{ fontSize: "30px" }}
+                    disabled
+                />
+            </div>
+
+        </WrapperStyleProject>
     );
 }
 
 
-export const InstructionTaskComponent = ({ content, instructionFile }) => {
+export const InstructionTaskComponent = ({ content, instructionFile, showDescription }) => {
     const [pdfUrl, setPdfUrl] = useState(null);
     useEffect(() => {
         if (instructionFile) {
@@ -87,11 +135,20 @@ export const InstructionTaskComponent = ({ content, instructionFile }) => {
 
     return (
         <WrapperStyleInstruction>
-            <div style={{ display: "flex" }}>
-                <p style={{ marginRight: "30px", color: "gray" }}>Note: </p>
-                <p>{content}</p>
+            <div style={{ display: "flex", marginBottom: "20px" }}>
+                <p style={{ color: "gray", marginRight: "10px" }}>Note: </p>
+                <p style={{
+                    maxWidth: "350px",
+                    display: "-webkit-box",     // Hiển thị dưới dạng box
+                    WebkitBoxOrient: "vertical", // Định hướng dọc
+                    overflow: "hidden",         // Ẩn nội dung vượt quá
+                    WebkitLineClamp: 3,         // Giới hạn 3 dòng
+                    textOverflow: "ellipsis",   // Hiển thị dấu "..." khi vượt quá
+                }} onClick={() => showDescription()}>
+                    {content}
+                </p>
             </div>
-            <WrapperStyleInstructionFile href={pdfUrl} download="instruction-file.docx" style={{ color: 'blue', textDecoration: 'underline' }}>
+            <WrapperStyleInstructionFile href={pdfUrl} download="instruction-file.docx" style={{ textDecoration: 'underline' }}>
                 download instruction file
                 <FileWordFilled />
             </WrapperStyleInstructionFile>
@@ -113,6 +170,7 @@ export const TaskResponseComponent = () => {
 export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
     const token = localStorage.getItem("tokenLogin");
 
+    const navigate = useNavigate();
 
     const [userIdInput, setUserIdInput] = useState("")
     const [userIdWantToAdd, setUserIdWantToAdd] = useState("");
@@ -166,6 +224,7 @@ export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
             const result = await response.json();
             if (result.status === "OK") {
                 alert("Assign success");
+                navigate(0);
             }
             else {
                 alert(result.message);
@@ -176,10 +235,10 @@ export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
     }
     return (
         <WrapperStyleAddUserForm>
-            <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "1px" }} onClick={onClose} />
-            <h3>Add User</h3>
+            <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "1px", fontSize:"20px" }} onClick={onClose} />
+            <h3 style={{fontSize:"30px"}}>Assign User</h3>
 
-            {/*hiển thị search nếu task không nằm trong project nào*/ }
+            {/*hiển thị search nếu task không nằm trong project nào*/}
             {!projectId && <div style={{ display: "flex" }}>
                 <Input placeholder="User ID" onChange={(e) => setUserIdInput(e.target.value)} />
                 <Button style={{ backgroundColor: "blanchedalmond", color: "gray" }} onClick={() => setUserIdWantToAdd(userIdInput)}>ADD</Button>
@@ -193,7 +252,7 @@ export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
                 </div>}
 
             <List
-                style={{ marginTop: "40px", height: "300px", overflowY: "scroll" }}
+                style={{ marginTop: "40px", height: "450px", overflowY: "scroll", overflowX:"hidden" }}
                 grid={{ gutter: 16, column: 3 }}
                 dataSource={users}
                 renderItem={(user) => (
@@ -205,8 +264,18 @@ export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
                 )}
             />
 
-            <Button style={{ marginTop: "70px", marginLeft: "460px", display: "block", backgroundColor: "grey" }} onClick={handleAddUserToTask}>Submit</Button>
+            <Button style={{ marginLeft: "460px", display: "block", backgroundColor: "grey" }} onClick={handleAddUserToTask}>Submit</Button>
 
         </WrapperStyleAddUserForm >
     )
+}
+
+export const DescriptionComponent = ({ description, hiddenDescription }) => {
+    return (
+        <WrapperStyleDescription>
+            <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "1px" }} onClick={() => hiddenDescription()} />
+            <p style={{ display: "flex", justifyContent: "center" }}> Description</p>
+            <p>{description}</p>
+        </WrapperStyleDescription>
+    );
 }
