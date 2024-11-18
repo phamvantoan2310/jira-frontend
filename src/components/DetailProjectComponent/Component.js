@@ -261,7 +261,7 @@ export const UserInformationComponent = ({ id, email, name, phonenumber, hiddenI
             <p style={{ display: "flex", justifyContent: "center", fontWeight: "bold" }}> {email}</p>
             <p style={{ marginTop: "50px", marginLeft: "60px" }}><SmileOutlined style={{color:"brown"}}/> {name}</p>
             <p style={{ marginLeft: "60px" }}><PhoneOutlined style={{color:"red"}}/> {phonenumber}</p>
-            <Button style={{border: "1px solid red", marginLeft:"330px"}} onClick={()=>removeFromProject(id)}>Xóa khỏi project</Button>
+            <Button style={{border: "1px solid red", marginLeft:"330px"}} onClick={()=>removeFromProject(id)}>Remove From project</Button>
             <p style={{ marginLeft: "280px", marginTop:"50px", fontSize:"15px" }}><IdcardOutlined style={{color:"green"}}/> {id}</p>
         </WrapperStyleUserInformation>
     );

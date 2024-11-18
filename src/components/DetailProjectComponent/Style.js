@@ -50,6 +50,8 @@ export const WrapperStyleUserInProject = styled.div`
 export const WrapperStyleTaskButton = styled(Button)`
     width: 150px;
     height: 150px;
+    font-size: 20px;
+    font-weight: bold;
 `
 
 export const WrapperStyleUpdateProjectButton = styled(Button)`

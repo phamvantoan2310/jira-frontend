@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 export const WrapperStyleRegisterPage = styled.div`
-    background-color: #ededed;
+    background-color: gray;
     display: flex;
     justify-content: center;
     height: 800px;
@@ -20,12 +20,17 @@ export const WrapperStyleFormRegister = styled(Form)`
 `
 
 export const WrapperStyleRegisterLable = styled.h2`
-    margin-left: 430px;
+    display: flex;
+    justify-content: center;
+    margin-top: 230px;
     color: blue;
+    font-size: 30px;
 `
 
 export const WrapperStyleRegisterSubmitButton = styled(Button)`
-    margin-left: 450px;
+    margin-left: 425px;
+    margin-top: 50px;
+    width: 100px;
     background-color: #0066ff;
     color: #fff;
 `

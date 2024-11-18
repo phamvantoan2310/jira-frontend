@@ -98,7 +98,7 @@ export const CreateProjectPage = () => {
     return (
         <div>
             <HeaderComponent error={isExpiredToken}/>
-            <div style={{ backgroundColor: "#b3b3cc", height: "1000px" }}>
+            <div style={{ backgroundColor: "#b3b3cc", height: "700px" }}>
                 <WrapperStyleCreateProjectPage>
                     <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "5px", fontSize: "20px" }} onClick={() => handleLinkToHomePage()} />
                     <WrapperStyleCreateProjectTitle>Create Project</WrapperStyleCreateProjectTitle>
@@ -120,7 +120,7 @@ export const CreateProjectPage = () => {
                         </Form.Item>
 
                         <Form.Item label="Instruction file" valuePropName="fileList">
-                            <Upload action="/upload.do" listType="picture-card" accept=".pdf,.doc,.docx,.xlsx,.png,.jpg,.jpeg" onChange={handleChangeFile}>
+                            <Upload action="/upload.do" listType="picture-card" accept=".doc,.docx" onChange={handleChangeFile}>
                                 <button style={{ border: 0, background: 'none' }} type="button">
                                     <div style={{ marginTop: 8 }}>Upload</div>
                                 </button>

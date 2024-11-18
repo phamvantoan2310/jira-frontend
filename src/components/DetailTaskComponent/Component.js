@@ -196,7 +196,6 @@ export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
 
                 const responseData = await response.json();
                 setUsers(responseData.data.users);
-                console.log(responseData.data.users);
             } catch (error) {
                 console.log(error);
             }

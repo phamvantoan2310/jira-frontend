@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import {
+    Col,
     DatePicker,
     Form,
     Input,
     Radio,
-    Upload,
+    Row,
 } from 'antd';
 import { WrapperStyleFormRegister, WrapperStyleRegisterLable, WrapperStyleRegisterPage, WrapperStyleRegisterSubmitButton } from "../../components/RegisterComponent/Style";
-import GetBase64 from "../../service/GetBase64";
 import { Navigate, useNavigate } from "react-router-dom";
-const normFile = (e) => {
-    if (Array.isArray(e)) {
-        return e;
-    }
-    return e?.fileList;
-};
+import {
+    ManOutlined,
+    WomanOutlined,
+    LockOutlined,
+    PhoneOutlined,
+    MailOutlined,
+    CalendarOutlined
+} from '@ant-design/icons';
 
 
 
@@ -29,7 +31,6 @@ export const RegisterPage = () => {
     const [phonenumber, setPhonenumber] = useState("");
     const [email, setEmail] = useState("");
     const [birthday, setBirthday] = useState("");
-    const [image, setImage] = useState("");
 
     const [error, setError] = useState("");
 
@@ -40,22 +41,6 @@ export const RegisterPage = () => {
             setConfirmPassword(confirmpassword);
         }
     }
-
-    const handleChangeImage = async (info) => {
-        if (info.fileList && info.fileList.length > 0) {
-            const file = info.fileList[0].originFileObj; // Đảm bảo lấy đúng đối tượng File
-
-            if (file) {
-                try {
-                    const base64 = await GetBase64(file);
-                    setImage(base64);
-                    console.log(image)
-                } catch (error) {
-                    console.error('Error converting file to base64:', error);
-                }
-            }
-        }
-    };
 
     const navigate = useNavigate();
 
@@ -76,7 +61,6 @@ export const RegisterPage = () => {
                     confirm_password: confirmPassword,
                     gender: gender,
                     birthday: birthday,
-                    image: image
                 })
             }).then(
                 (response) => {
@@ -91,7 +75,7 @@ export const RegisterPage = () => {
                     if (result.status === "OK") {
                         navigate("/loginPage");
                         alert("login success, login please!");
-                    }else{
+                    } else {
                         <Navigate replace to="/registerPage" />
                         setError(result.message);
                     }
@@ -108,65 +92,61 @@ export const RegisterPage = () => {
     return (
         <WrapperStyleRegisterPage>
             <WrapperStyleFormRegister labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ maxWidth: 1000 }}>
-
-                <WrapperStyleRegisterLable>Đăng ký</WrapperStyleRegisterLable>
-
-                <Form.Item label="Full Name" name={"name"} rules={[{ required: true, message: 'Please input your name!' }]}>
-                    <Input onChange={(e) => setName(e.target.value)} />
-                </Form.Item>
-
-                <Form.Item label="Gender" name={"gender"} rules={[{ required: true, message: 'Please input your gender!' }]}>
-                    <Radio.Group onChange={(e) => setGender(e.target.value)}>
-                        <Radio value="male"> male </Radio>
-                        <Radio value="female"> female </Radio>
-                    </Radio.Group>
-                </Form.Item>
-
-                <Form.Item label="Password" name={"password"} rules={[{ required: true, message: 'Please input your password!' }]}>
-                    <Input onChange={(e) => setPassword(e.target.value)} />
-                </Form.Item>
-
-                <Form.Item label="Confirm Password" name={"confirmpassword"} rules={[{ required: true, message: 'Please input your confirm password!' }]}>
-                    <Input onChange={(e) => handleChangeConfirmPassword(e.target.value)} />
-                </Form.Item>
-
-                <Form.Item label="PhoneNumber" name={"phonenumber"} rules={[{ required: true, message: 'Please input your phone number!' }]}>
-                    <Input onChange={(e) => setPhonenumber(e.target.value)} />
-                </Form.Item>
-
-                <Form.Item label="Email" name={"email"} rules={[{ required: true, message: 'Please input your email!' }]}>
-                    <Input onChange={(e) => setEmail(e.target.value)} />
-                </Form.Item>
-
-                <Form.Item label="Birth day" name={"birthday"} rules={[{ required: true, message: 'Please input your birth day!' }]}>
-                    <DatePicker  onChange={(date, dateString) => setBirthday(dateString)} />
-                </Form.Item>
+                <Row type="flex" style={{ height: '100%' }} justify="space-around" align="middle">
+                    <Col flex="auto" style={{ backgroundColor: '#f0f0f0', height: '100%' }}>
+                        <p style={{ color: "gray", fontWeight: "bold", fontSize: "35px", margin: "20px" }}>JIRA CLONE</p>
+                        <WrapperStyleRegisterLable>Đăng ký</WrapperStyleRegisterLable>
+                        <div style={{display:"flex", justifyContent:"center", marginTop: "10px"}}>
+                            <a href="/loginPage">bạn đã có sẵn tài khoản?</a>
+                        </div>
+                    </Col>
 
 
-                <Form.Item label="Ảnh đại diện" valuePropName="fileList" getValueFromEvent={normFile}>
-                    <Upload action="" listType="picture-card" onChange={handleChangeImage}>
-                        <button
-                            style={{
-                                border: 0,
-                                background: 'none',
-                            }}
-                            type="button"
-                        >
 
-                            <div
-                                style={{
-                                    marginTop: 8,
-                                }}
-                            >
-                                Upload
-                            </div>
-                        </button>
-                    </Upload>
-                </Form.Item>
-                {error && <div style={{ color: 'red', marginLeft:"50px", marginBottom:"40px" }}>{error}</div>}
-                <Form.Item>
-                    <WrapperStyleRegisterSubmitButton onClick={handleRegister}>Submit</WrapperStyleRegisterSubmitButton>
-                </Form.Item>
+                    <Col flex="auto" style={{ backgroundColor: '#d9d9d9', height: '100%', width: "400px" }}>
+                        <div style={{ marginTop: "150px", marginLeft: "100px" }}>
+                            <Form.Item label="name" name={"name"} rules={[{ required: true, message: 'Please input your name!' }]}>
+                                <Input onChange={(e) => setName(e.target.value)} placeholder="name" />
+                            </Form.Item>
+
+                            <Form.Item label="gen" name={"gender"} rules={[{ required: true, message: 'Please input your gender!' }]}>
+                                <Radio.Group onChange={(e) => setGender(e.target.value)}>
+                                    <Radio value="male"> <ManOutlined /> </Radio>
+                                    <Radio value="female"> <WomanOutlined /> </Radio>
+                                </Radio.Group>
+                            </Form.Item>
+
+                            <Form.Item label={<LockOutlined />} name={"password"} rules={[{ required: true, message: 'Please input your password!' }]}>
+                                <Input onChange={(e) => setPassword(e.target.value)} placeholder="password" />
+                            </Form.Item>
+
+                            <Form.Item label={<LockOutlined />} name={"confirmpassword"} rules={[{ required: true, message: 'Please input your confirm password!' }]}>
+                                <Input onChange={(e) => handleChangeConfirmPassword(e.target.value)} placeholder="confirm password" />
+                            </Form.Item>
+
+                            <Form.Item label={<PhoneOutlined />} name={"phonenumber"} rules={[{ required: true, message: 'Please input your phone number!' }]}>
+                                <Input onChange={(e) => setPhonenumber(e.target.value)} placeholder="phone number" />
+                            </Form.Item>
+
+                            <Form.Item label={<MailOutlined />} name={"email"} rules={[{ required: true, message: 'Please input your email!' }]}>
+                                <Input onChange={(e) => setEmail(e.target.value)} placeholder="email" />
+                            </Form.Item>
+
+                            <Form.Item label={<CalendarOutlined />} name={"birthday"} rules={[{ required: true, message: 'Please input your birth day!' }]}>
+                                <DatePicker onChange={(date, dateString) => setBirthday(dateString)} placeholder="birthday" />
+                            </Form.Item>
+                        </div>
+                        <WrapperStyleRegisterSubmitButton onClick={handleRegister}>Register</WrapperStyleRegisterSubmitButton>
+                    </Col>
+                </Row>
+
+
+
+                {error && <div style={{ color: 'red', marginLeft: "400px", marginBottom: "10px" }}>{error}</div>}
+
+
+
+
 
             </WrapperStyleFormRegister>
         </WrapperStyleRegisterPage>

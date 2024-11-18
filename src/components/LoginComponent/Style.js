@@ -20,5 +20,5 @@ export const WrapperStyleLoginForm = styled(Form)`
 
 export const WrapperStyleLoginLable = styled.h2`
     padding-bottom: 50px;
-    margin-left: 90px;
+    margin-left: 150px;
 `

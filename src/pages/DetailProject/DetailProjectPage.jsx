@@ -375,7 +375,7 @@ export const DetailProjectPage = () => {
                                         task.status == "In-Progress" ?
                                             <WrapperStyleTaskButton style={{ backgroundColor: "green", color: "white" }} onClick={() => handleLinkToTask(task._id)}>{task.name}<PlayCircleOutlined /></WrapperStyleTaskButton> :
                                             task.status == "Complete" ?
-                                                <WrapperStyleTaskButton type="primary" onClick={() => handleLinkToTask(task.id)}>{task.name}<CheckOutlined /></WrapperStyleTaskButton> :
+                                                <WrapperStyleTaskButton type="primary" onClick={() => handleLinkToTask(task._id)}>{task.name}<CheckOutlined /></WrapperStyleTaskButton> :
                                                 <WrapperStyleTaskButton style={{ backgroundColor: "orange", color: "white" }} onClick={() => handleLinkToTask(task._id)}>{task.name}<CloseOutlined /></WrapperStyleTaskButton>
                                     );
                                 })

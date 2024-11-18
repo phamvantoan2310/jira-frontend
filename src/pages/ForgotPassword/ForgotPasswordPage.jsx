@@ -76,7 +76,7 @@ const ForgotPasswordPage = () => {
                 initialValues={{ remember: true }}
                 autoComplete="off"
             >
-                <WrapperStyleForgotPasswordLable>Đặt lại mật khẩu</WrapperStyleForgotPasswordLable>
+                <WrapperStyleForgotPasswordLable>Xác thực OTP</WrapperStyleForgotPasswordLable>
                 <Form.Item
                     label="Email"
                     name="email"

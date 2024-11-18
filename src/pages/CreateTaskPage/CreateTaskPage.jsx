@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { WrapperStyleChooseProjectButton, WrapperStyleCreateTaskForm, WrapperStyleCreateTaskPage, WrapperStyleCreateTaskTitle, WrapperStyleSubmitButton } from "../../components/CreateTaskPageComponent/Style";
+import {  WrapperStyleCreateTaskForm, WrapperStyleCreateTaskPage, WrapperStyleCreateTaskTitle, WrapperStyleSubmitButton } from "../../components/CreateTaskPageComponent/Style";
 import { DatePicker, Form, Input, Upload, } from 'antd';
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -95,7 +95,7 @@ export const CreateTaskPage = () => {
     return (
         <div>
             <HeaderComponent error={isExpiredToken}/>
-            <div style={{ backgroundColor: "#b3b3cc", height: "1000px" }}>
+            <div style={{ backgroundColor: "#b3b3cc", height: "700px" }}>
                 <WrapperStyleCreateTaskPage>
                     <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "5px", fontSize: "20px" }} onClick={() => handleLinkToHomePage()} />
                     <WrapperStyleCreateTaskTitle>Create Task</WrapperStyleCreateTaskTitle>
@@ -122,10 +122,6 @@ export const CreateTaskPage = () => {
                                     <div style={{ marginTop: 8 }}>Upload</div>
                                 </button>
                             </Upload>
-                        </Form.Item>
-
-                        <Form.Item>
-                            <WrapperStyleChooseProjectButton>Choose Project</WrapperStyleChooseProjectButton>
                         </Form.Item>
 
                         <Form.Item>

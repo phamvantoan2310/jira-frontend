@@ -103,7 +103,7 @@ export const DetailTaskPage = () => {
     //remove from project
     const handleRemoveFromProject = async () => {
         try {
-            const endpoint = `${process.env.REACT_APP_API_KEY}/task//removefromproject/${IdTask}`;
+            const endpoint = `${process.env.REACT_APP_API_KEY}/task/removefromproject/${IdTask}`;
             const response = await fetch(endpoint, {
                 method: 'PUT',
                 headers: {
