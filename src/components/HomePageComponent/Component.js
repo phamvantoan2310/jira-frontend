@@ -27,23 +27,16 @@ export const CardComponent = ({ IdProject, NameProject, Status, DueDate, StartDa
             </div>
 
 
-            {Status == "In-Progress" ?                             //toán tử 3 ngôi lồng nhau(inprogress: green, completed: blue, not started: orange)
-                (<div style={{ marginTop: "50px", fontSize: "20px", color: "green", display: "flex" }}>
-                    <StarFilled />
-                    <h3 style={{ marginLeft: "20px" }}>{Status}</h3>
-                </div>) :
+            <div style={{
+                marginTop: "50px",
+                fontSize: "20px",
+                color: ((Status === "In-Progress") ? "green" : (Status === "Complete") ? "blue" : "orange"),
+                display: "flex"
+            }}>
+                <StarFilled />
+                <h3 style={{ marginLeft: "20px" }}>{Status}</h3>
+            </div>
 
-                (Status == "Complete" ?
-                    (<div style={{ marginTop: "50px", fontSize: "20px", color: "blue", display: "flex" }}>
-                        <StarFilled />
-                        <h3 style={{ marginLeft: "20px" }}>{Status}</h3>
-                    </div>) :
-
-                    <div style={{ marginTop: "50px", fontSize: "20px", color: "orange", display: "flex" }}>
-                        <StarFilled />
-                        <h3 style={{ marginLeft: "20px" }}>{Status}</h3>
-                    </div>
-                )}
 
 
             <div style={{ marginTop: "20px", fontSize: "15px" }}>

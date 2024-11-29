@@ -14,6 +14,7 @@ export const WrapperStyleProjectName = styled.div`
     font-size: 30px;
     padding-top: 60px; 
     padding-left: 60px;  
+    width : 450px
 `
 
 export const WrapperStyleStatusProject = styled(Button)`

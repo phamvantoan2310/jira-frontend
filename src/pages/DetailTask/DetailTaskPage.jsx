@@ -140,12 +140,17 @@ export const DetailTaskPage = () => {
     useEffect(() => {
         async function setStatusTask() {
             const due_date = new Date(task?.due_date);
+            const start_date = new Date(task?.start_date);
             const current_date = new Date();
 
             if (due_date < current_date) {
                 setStatus("Complete");
             } else {
                 setStatus("In-Progress");
+            }
+
+            if(start_date > current_date){
+                setStatus("Not-Started");
             }
         }
         setStatusTask();
@@ -196,6 +201,9 @@ export const DetailTaskPage = () => {
             <HeaderComponent error={isExpiredToken} />
             <div style={{ height: '100vh', padding: '20px' }}>
                 <Row type="flex" style={{ height: '100%' }} justify="space-around" align="middle">
+
+
+
                     <Col flex="auto" style={{ backgroundColor: '#f0f0f0', height: '100%' }}>
                         <WrapperStyleTaskName>
                             {task?.name}
@@ -210,24 +218,38 @@ export const DetailTaskPage = () => {
                             <WrapperStyleDeleteButton onClick={handleDeleteTask}>Delete</WrapperStyleDeleteButton>
                         </div>
                     </Col>
+
+
+
+
                     <Col flex="auto" style={{ backgroundColor: '#d9d9d9', height: '100%', width: "750px" }}>
                         <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "5px", fontSize: "20px" }} onClick={() => handleLinkToHomePage()} />
                         <p style={{ color: "#4d4d4d", fontWeight: "bold", fontSize: "20px", margin: "5px" }}>Task detail</p>
                         <div style={{ height: '100vh', padding: '20px' }}>
                             <Row style={{ height: '100%' }}>
+
+                                {/* project */}
                                 <Col span={24} style={{ backgroundColor: 'white', height: '40%', marginBottom: "-100px", borderRadius: "10px" }}>
                                     <p style={{ color: "gray", fontWeight: "bold", fontSize: "15px", margin: "5px" }}>project</p>
                                     <TaskInProjectComponent projectName={project?.name} projectId={project?._id} status={project?.status} startDate={project?.start_date} dueDate={project?.due_date} />
                                     <WrapperStyleRemoveFromProjectButton onClick={handleRemoveFromProject}>Remove from project</WrapperStyleRemoveFromProjectButton>
                                 </Col>
+
+                                {/* user  */}
                                 <Col span={24} style={{ backgroundColor: '#f0f0f0', height: '40%', borderRadius: "10px" }}>
                                     <p style={{ color: "gray", fontWeight: "bold", fontSize: "20px", margin: "5px" }}>assign to</p>
                                     <AssignToComponent emailUser={assign_to?.email} name={assign_to?.name} phonenumber={assign_to?.phone_number} />
                                     <WrapperStyleAddUserButton onClick={handleIsShowAddUserForm}>Assign User</WrapperStyleAddUserButton>
                                 </Col>
+
+
                             </Row>
                         </div>
                     </Col>
+
+
+
+
                 </Row>
             </div>
 

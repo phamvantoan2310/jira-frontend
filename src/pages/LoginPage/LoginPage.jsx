@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { WrapperStyleLoginForm, WrapperStyleLoginLable, WrapperStyleLoginPage } from "../../components/LoginComponent/Style";
 import { ForgotPasswordLinkComponent, RegisterLinkComponent } from "../../components/LoginComponent/Component";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -83,7 +83,7 @@ const LoginPage = () => {
 
                 <ForgotPasswordLinkComponent></ForgotPasswordLinkComponent>
                 <RegisterLinkComponent></RegisterLinkComponent>
-                {error && <div style={{ color: 'red', marginLeft:"50px", marginBottom:"40px" }}>{error}</div>}
+                {error && <div style={{ color: 'red', marginLeft:"100px", marginTop:"40px", marginBottom:"20px" }}>Kiểm tra lại email hoặc mật khẩu</div>}
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button type="primary" htmlType="submit" onClick={() => handleLogin()}>

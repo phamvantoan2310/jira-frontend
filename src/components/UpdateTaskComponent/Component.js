@@ -24,7 +24,6 @@ export const UpdateTask = ({ taskName, description, startDate, dueDate, taskId, 
     const [dueDateUpdate, setDueDate] = useState("");
     const [instructionFile, setInstructionFile] = useState("");
 
-    const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
@@ -129,7 +128,7 @@ export const UpdateTask = ({ taskName, description, startDate, dueDate, taskId, 
                 </Form.Item>
 
                 <Form.Item label="Instruction file" valuePropName="fileList">
-                    <Upload action="/upload.do" listType="picture-card" accept=".pdf,.doc,.docx,.xlsx,.png,.jpg,.jpeg" onChange={handleChangeFile}>
+                    <Upload action="/upload.do" listType="picture-card" accept=".docx" onChange={handleChangeFile}>
                         <button style={{ border: 0, background: 'none' }} type="button">
                             <div style={{ marginTop: 8 }}>Upload</div>
                         </button>
@@ -139,8 +138,6 @@ export const UpdateTask = ({ taskName, description, startDate, dueDate, taskId, 
                 <Form.Item>
                     <WrapperStyleSubmitButton onClick={handleUpdateTask}>Update</WrapperStyleSubmitButton>
                 </Form.Item>
-
-                {error && <div style={{ color: 'red', marginLeft: "50px", marginBottom: "40px" }}>{error}</div>}
             </WrapperStyleUpdateTaskForm>
         </WrapperStyleUpdateForm>
     );

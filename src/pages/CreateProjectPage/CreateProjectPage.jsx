@@ -130,7 +130,7 @@ export const CreateProjectPage = () => {
                         <Form.Item>
                             <WrapperStyleSubmitButton onClick={handleCreateProject}>Tạo</WrapperStyleSubmitButton>
                         </Form.Item>
-                        {error && <div style={{ color: 'red', marginLeft: "50px", marginBottom: "40px" }}>{error}</div>}
+                        {error && <div style={{ color: 'red', marginLeft: "200px", marginTop:"-20px" }}>{error}</div>}
                     </WrapperStyleCreateProjectForm>
                 </WrapperStyleCreateProjectPage>
             </div>

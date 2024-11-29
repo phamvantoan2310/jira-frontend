@@ -8,6 +8,7 @@ export const WrapperStyleTaskName = styled.div`
     font-size: 30px;
     padding-top: 60px;   
     padding-left: 60px;
+    width : 450px;
 `
 
 export const WrapperStyleStatusTask = styled(Button)`

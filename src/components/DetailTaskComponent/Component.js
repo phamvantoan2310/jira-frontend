@@ -81,7 +81,7 @@ export const TaskInProjectComponent = ({ projectName, projectId, startDate, dueD
         <WrapperStyleProject>
             <div style={{ display: 'flex', gap: "10px" }}>
                 <div style={{ marginRight: "80px" }}>
-                    <Button style={{ fontSize: "40px", backgroundColor: "#2828d0", height: "60px", width: "300px" }} onClick={() => handleNavigateProjectDetail()}><p style={{ color: "white" }}>{projectName}</p></Button>
+                    <Button style={{ fontSize: "15px", backgroundColor: "#2828d0", height: "60px", width: "300px", whiteSpace: "normal" /*cho xuống dòng */ }} onClick={() => handleNavigateProjectDetail()}><p style={{display:"flex", color: "white", width:"300px" }}>{projectName}</p></Button>
                     <p style={{ paddingTop: "20px", fontSize: "20px", color: "green" }}>{status}</p>
                 </div>
                 <RangePicker

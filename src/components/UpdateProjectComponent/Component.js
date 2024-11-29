@@ -20,13 +20,16 @@ export const UpdateProject = ({ projectName, description, startDate, dueDate, pr
     const validStartDate = moment(startDate, "YYYY-MM-DD", true);  //format string sang date
     const validDueDate = moment(dueDate, "YYYY-MM-DD", true);
 
+    if(!validDueDate.isValid() || !validStartDate.isValid()){
+        console.log("định dạng ngày sai");
+    }
+
     const [projectNameUpdate, setProjectName] = useState("");
     const [descriptionUpdate, setDescription] = useState("");
     const [startDateUpdate, setStartDate] = useState("");
     const [dueDateUpdate, setDueDate] = useState("");
     const [instructionFile, setInstructionFile] = useState("");
 
-    const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
@@ -132,7 +135,7 @@ export const UpdateProject = ({ projectName, description, startDate, dueDate, pr
                 </Form.Item>
 
                 <Form.Item label="Instruction file" valuePropName="fileList">
-                    <Upload action="/upload.do" listType="picture-card" accept=".pdf,.doc,.docx,.xlsx,.png,.jpg,.jpeg" onChange={handleChangeFile}>
+                    <Upload action="/upload.do" listType="picture-card" accept=".docx" onChange={handleChangeFile}>
                         <button style={{ border: 0, background: 'none' }} type="button">
                             <div style={{ marginTop: 8 }}>Upload</div>
                         </button>
@@ -142,8 +145,6 @@ export const UpdateProject = ({ projectName, description, startDate, dueDate, pr
                 <Form.Item>
                     <WrapperStyleSubmitButton onClick={handleUpdateProject}>Update</WrapperStyleSubmitButton>
                 </Form.Item>
-
-                {error && <div style={{ color: 'red', marginLeft: "50px", marginBottom: "40px" }}>{error}</div>}
             </WrapperStyleUpdateProjectForm>
         </WrapperStyleUpdateForm>
     );

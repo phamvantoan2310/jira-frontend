@@ -40,6 +40,7 @@ export const DateComponent = ({ dueDate, startDate }) => {
                 status="warning"
                 value={dateRange}
                 style={{ fontSize: "30px", fontWeight: "bold" }}
+                format={"YYYY-MM-DD"}
                 disabled
             />
         </WrapperStyleDate>
@@ -54,7 +55,7 @@ export const InstructionProjectComponent = ({ content, instructionFile, showDesc
 
             // Chuyển đổi Base64 thành Blob
             const base64ToBlob = (base64Data, contentType) => {
-                const byteCharacters = atob(base64Data.split(',')[1]);
+                const byteCharacters = atob(base64Data.split(',')[1]);    //byte arr
                 const byteArrays = [];
 
                 for (let offset = 0; offset < byteCharacters.length; offset += 512) {
@@ -62,10 +63,10 @@ export const InstructionProjectComponent = ({ content, instructionFile, showDesc
 
                     const byteNumbers = new Array(slice.length);
                     for (let i = 0; i < slice.length; i++) {
-                        byteNumbers[i] = slice.charCodeAt(i);
+                        byteNumbers[i] = slice.charCodeAt(i);  //unicode
                     }
 
-                    const byteArray = new Uint8Array(byteNumbers);
+                    const byteArray = new Uint8Array(byteNumbers);    //bit arr
                     byteArrays.push(byteArray);
                 }
 
@@ -152,8 +153,8 @@ export const FreeTaskListComponent = ({ tasks, projectId, onClose }) => {
             <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "1px" }} onClick={onClose} />
             <h3>Add Task</h3>
 
-            {tasks.map(task => (<Button style={{ border: "1px solid green", width: "100px", height: "100px", margin: "10px", fontSize: "20px", color: "blueviolet" }} key={task._id} onClick={() => handleAddTaskToProject(projectId, task._id)}>
-                {task.name}
+            {tasks.map(task => (<Button style={{ border: "1px solid green", width: "100px", height: "100px", margin: "10px", fontSize: "20px", color: "blueviolet" }} key={task._id} onClick={() => handleAddTaskToProject(projectId, task._id)} title={task.name}>
+                {task.name.includes(':') ? task.name.substring(0, task.name.indexOf(':')) : task.name.substring(0, 7)}
             </Button>))
             }
         </WrapperStyleAddTaskForm >
@@ -259,10 +260,10 @@ export const UserInformationComponent = ({ id, email, name, phonenumber, hiddenI
         <WrapperStyleUserInformation>
             <CloseCircleFilled style={{ display: "flex", justifyContent: "flex-end", padding: "1px" }} onClick={() => hiddenInformation()} />
             <p style={{ display: "flex", justifyContent: "center", fontWeight: "bold" }}> {email}</p>
-            <p style={{ marginTop: "50px", marginLeft: "60px" }}><SmileOutlined style={{color:"brown"}}/> {name}</p>
-            <p style={{ marginLeft: "60px" }}><PhoneOutlined style={{color:"red"}}/> {phonenumber}</p>
-            <Button style={{border: "1px solid red", marginLeft:"330px"}} onClick={()=>removeFromProject(id)}>Remove From project</Button>
-            <p style={{ marginLeft: "280px", marginTop:"50px", fontSize:"15px" }}><IdcardOutlined style={{color:"green"}}/> {id}</p>
+            <p style={{ marginTop: "50px", marginLeft: "60px" }}><SmileOutlined style={{ color: "brown" }} /> {name}</p>
+            <p style={{ marginLeft: "60px" }}><PhoneOutlined style={{ color: "red" }} /> {phonenumber}</p>
+            <Button style={{ border: "1px solid red", marginLeft: "330px" }} onClick={() => removeFromProject(id)}>Remove From project</Button>
+            <p style={{ marginLeft: "280px", marginTop: "50px", fontSize: "15px" }}><IdcardOutlined style={{ color: "green" }} /> {id}</p>
         </WrapperStyleUserInformation>
     );
 }
