@@ -120,7 +120,7 @@ export const CreateProjectPage = () => {
                         </Form.Item>
 
                         <Form.Item label="Instruction file" valuePropName="fileList">
-                            <Upload action="/upload.do" listType="picture-card" accept=".doc,.docx" onChange={handleChangeFile}>
+                            <Upload action="/upload.do" listType="picture-card" accept=".docx" onChange={handleChangeFile}>
                                 <button style={{ border: 0, background: 'none' }} type="button">
                                     <div style={{ marginTop: 8 }}>Upload</div>
                                 </button>

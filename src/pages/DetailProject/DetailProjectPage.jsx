@@ -293,7 +293,7 @@ export const DetailProjectPage = () => {
                 const result = await response.json();
                 if (result.status === 'OK') {
                     alert(`remove user success`);
-                    window.location.reload();
+                    navigate(0);
                 }
             } catch (error) {
                 console.log(error);

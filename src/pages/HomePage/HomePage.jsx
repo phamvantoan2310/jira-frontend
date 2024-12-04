@@ -214,6 +214,7 @@ const HomePage = () => {
                             marginTop: "40px"
                         }} />
 
+                        <p style={{ color: "gray", fontWeight: "bold", fontSize: "20px", marginLeft: "10px" }}>Contact: </p>
                         <p style={{ color: "gray", fontWeight: "bold", fontSize: "20px", marginLeft: "10px" }}><MailOutlined style={{ marginRight: "10px" }} />{manager?.email} </p>
                         <p style={{ color: "gray", fontWeight: "bold", fontSize: "20px", marginLeft: "10px" }}><PhoneOutlined style={{ marginRight: "10px" }} />{manager?.phone_number} </p>
                     </Col>

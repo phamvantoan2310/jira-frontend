@@ -119,6 +119,7 @@ export const DetailTaskPage = () => {
             const result = await response.json();
             if (result.status == "OK") {
                 alert("remove task from project success!");
+                navigate(0);
             } else {
                 alert("remove task from project fail");
             }

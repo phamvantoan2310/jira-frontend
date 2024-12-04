@@ -256,7 +256,7 @@ export const AddUserToTaskComponent = ({ projectId, taskId, onClose }) => {
                 dataSource={users}
                 renderItem={(user) => (
                     <List.Item>
-                        <Button onClick={() => setUserIdWantToAdd(user._id)}>
+                        <Button onClick={() => setUserIdWantToAdd(user._id)} style={{marginBottom: "50px"}}>
                             <Card title={user._id}>{user.email}</Card>
                         </Button>
                     </List.Item>

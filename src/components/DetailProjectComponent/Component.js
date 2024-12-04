@@ -55,7 +55,7 @@ export const InstructionProjectComponent = ({ content, instructionFile, showDesc
 
             // Chuyển đổi Base64 thành Blob
             const base64ToBlob = (base64Data, contentType) => {
-                const byteCharacters = atob(base64Data.split(',')[1]);    //byte arr
+                const byteCharacters = atob(base64Data.split(',')[1]);    //chuỗi ký tự nhị phân
                 const byteArrays = [];
 
                 for (let offset = 0; offset < byteCharacters.length; offset += 512) {
@@ -66,7 +66,7 @@ export const InstructionProjectComponent = ({ content, instructionFile, showDesc
                         byteNumbers[i] = slice.charCodeAt(i);  //unicode
                     }
 
-                    const byteArray = new Uint8Array(byteNumbers);    //bit arr
+                    const byteArray = new Uint8Array(byteNumbers);    //byte arr
                     byteArrays.push(byteArray);
                 }
 
@@ -262,7 +262,7 @@ export const UserInformationComponent = ({ id, email, name, phonenumber, hiddenI
             <p style={{ display: "flex", justifyContent: "center", fontWeight: "bold" }}> {email}</p>
             <p style={{ marginTop: "50px", marginLeft: "60px" }}><SmileOutlined style={{ color: "brown" }} /> {name}</p>
             <p style={{ marginLeft: "60px" }}><PhoneOutlined style={{ color: "red" }} /> {phonenumber}</p>
-            <Button style={{ border: "1px solid red", marginLeft: "330px" }} onClick={() => removeFromProject(id)}>Remove From project</Button>
+            <Button style={{ border: "1px solid red", marginLeft: "330px" }} onClick={() => removeFromProject()}>Remove From project</Button>
             <p style={{ marginLeft: "280px", marginTop: "50px", fontSize: "15px" }}><IdcardOutlined style={{ color: "green" }} /> {id}</p>
         </WrapperStyleUserInformation>
     );

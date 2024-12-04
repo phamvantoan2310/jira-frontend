@@ -1,7 +1,7 @@
 import { Button, Form, Input } from "antd";
 import React, { useState } from "react";
 import { WrapperStyleChangePasswordForm, WrapperStyleChangePasswordLable, WrapperStyleChangePasswordPage } from "../../components/ChangePasswordComponent/Style";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 
@@ -11,6 +11,8 @@ const ChangePasswordPage = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
 
     const handleChangeConfirmPassword = () => {
         if (confirmPassword !== password) {
@@ -38,6 +40,7 @@ const ChangePasswordPage = () => {
             const result = await response.json();
             if (result.status == "OK") {
                 alert("change password success!");
+                navigate("/loginPage");
             }
 
         } catch (error) {

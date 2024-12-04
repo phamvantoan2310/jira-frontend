@@ -39,6 +39,7 @@ export const RegisterPage = () => {
             setError("password is not equal");
         } else {
             setConfirmPassword(confirmpassword);
+            setError("");
         }
     }
 
@@ -74,7 +75,7 @@ export const RegisterPage = () => {
                 result => {
                     if (result.status === "OK") {
                         navigate("/loginPage");
-                        alert("login success, login please!");
+                        alert("register success, login please!");
                     } else {
                         <Navigate replace to="/registerPage" />
                         setError(result.message);
